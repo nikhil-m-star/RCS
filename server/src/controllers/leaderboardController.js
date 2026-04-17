@@ -1,5 +1,5 @@
-import prisma from '../lib/prisma.js';
 import { demoStore } from '../lib/demoData.js';
+import { query } from '../lib/db.js';
 
 export const getLeaderboard = async (req, res) => {
   // Demo mode fallback
@@ -8,20 +8,18 @@ export const getLeaderboard = async (req, res) => {
   }
 
   try {
-    const top10 = await prisma.user.findMany({
-      orderBy: { pathScore: 'desc' },
-      take: 10,
-      select: {
-        id: true,
-        clerkId: true,
-        username: true,
-        pathScore: true,
-        streak: true,
-      },
-    });
+    const result = await query(
+      `
+        select "id", "clerkId", "username", "pathScore", "streak"
+        from "User"
+        order by "pathScore" desc, "createdAt" asc
+        limit 10
+      `
+    );
 
-    res.json(top10);
+    res.json(result.rows);
   } catch (error) {
+    console.error('[getLeaderboard] failed', error);
     res.status(500).json({ error: error.message });
   }
 };

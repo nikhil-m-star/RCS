@@ -20,3 +20,6 @@ export const logHabit = (category) => api.post('/habits', { category });
 export const getTodayHabits = (userId) => api.get(`/habits/${userId}`);
 export const getScore = (userId) => api.get(`/score/${userId}`);
 export const getLeaderboard = () => api.get('/leaderboard');
+
+export const getApiErrorMessage = (error, fallbackMessage) =>
+  error?.response?.data?.error || fallbackMessage;

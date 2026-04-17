@@ -8,7 +8,7 @@ import { TetrisFall } from '../components/TetrisFall';
 import { FogBackground } from '../components/FogBackground';
 import { HabitPanel } from './HabitPanel';
 import { PageShell } from '../components/PageShell';
-import { setAuthToken, syncUser, getScore, getTodayHabits } from '../lib/api';
+import { getApiErrorMessage, setAuthToken, syncUser, getScore, getTodayHabits } from '../lib/api';
 import { categoryColors } from '../lib/categories.js';
 
 const EMPTY_SCORE = { todayScore: 0, pathScore: 0, streak: 0 };
@@ -35,11 +35,11 @@ export function Dashboard() {
       setScore(scoreRes.data);
       setTodayHabits(habitsRes.data);
       setIsReady(true);
-    } catch {
-      console.warn('[Footprints] API unavailable, showing empty state');
+    } catch (error) {
+      console.warn('[Footprints] API unavailable, showing empty state', error);
       setScore(EMPTY_SCORE);
       setTodayHabits([]);
-      setLoadError('Live data unavailable');
+      setLoadError(getApiErrorMessage(error, 'Live data unavailable'));
       setIsReady(true);
     }
   };
@@ -60,11 +60,11 @@ export function Dashboard() {
             setTodayHabits(habitsRes.data);
             setLoadError('');
             setIsReady(true);
-          } catch {
-            console.warn('[Footprints] API unavailable, showing empty state');
+          } catch (error) {
+            console.warn('[Footprints] API unavailable, showing empty state', error);
             setScore(EMPTY_SCORE);
             setTodayHabits([]);
-            setLoadError('Live data unavailable');
+            setLoadError(getApiErrorMessage(error, 'Live data unavailable'));
             setIsReady(true);
           }
         })();
@@ -184,7 +184,7 @@ export function Dashboard() {
                       color: '#fda4af',
                     }}
                   >
-                    {loadError}. Sign in again or start the server to load your real score.
+                    {loadError}. Sign in again or check the backend connection.
                   </div>
                 </TetrisFall>
               )}

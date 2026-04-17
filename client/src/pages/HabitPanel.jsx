@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useAuth } from '../lib/auth.js';
 import { HabitTile } from '../components/HabitTile';
 import { CATEGORIES } from '../lib/categories.js';
-import { logHabit, setAuthToken } from '../lib/api';
+import { getApiErrorMessage, logHabit, setAuthToken } from '../lib/api';
 
 export function HabitPanel({ onClose, onLogged, loggedCategories = [] }) {
   const { getToken } = useAuth();
@@ -17,9 +17,9 @@ export function HabitPanel({ onClose, onLogged, loggedCategories = [] }) {
       await logHabit(category);
       await onLogged();
       onClose();
-    } catch {
-      console.warn('[Footprints] API unavailable, unable to log habit');
-      setErrorMessage('Could not log right now. Check auth or backend connection.');
+    } catch (error) {
+      console.warn('[Footprints] API unavailable, unable to log habit', error);
+      setErrorMessage(getApiErrorMessage(error, 'Could not log right now. Check auth or backend connection.'));
     }
   };
 

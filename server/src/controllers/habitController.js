@@ -1,5 +1,6 @@
-import prisma from '../lib/prisma.js';
 import { demoStore } from '../lib/demoData.js';
+import { pool, query } from '../lib/db.js';
+import { randomUUID } from 'node:crypto';
 
 const CATEGORY_POINTS = {
   transport: 15,
@@ -23,63 +24,91 @@ export const logHabit = async (req, res) => {
   }
 
   try {
-    const { userId } = req.auth;
+    const { userId } = req.auth ?? {};
+
+    if (!userId) {
+      return res.status(401).json({ error: 'Unauthorized: missing Clerk user ID' });
+    }
 
     if (!CATEGORY_POINTS[category]) {
       return res.status(400).json({ error: 'Invalid category' });
     }
 
     const points = CATEGORY_POINTS[category];
+    const client = await pool.connect();
 
-    const user = await prisma.user.findUnique({ where: { clerkId: userId } });
-    if (!user) {
-      return res.status(404).json({ error: 'User not found. Sync first.' });
+    try {
+      await client.query('begin');
+
+      const userResult = await client.query(
+        `select "id", "streak" from "User" where "clerkId" = $1 limit 1`,
+        [userId]
+      );
+
+      if (userResult.rowCount === 0) {
+        await client.query('rollback');
+        return res.status(404).json({ error: 'User not found. Sync first.' });
+      }
+
+      const user = userResult.rows[0];
+
+      const habitResult = await client.query(
+        `
+          insert into "Habit" ("id", "userId", "category", "label", "points")
+          values ($1, $2, $3, $4, $5)
+          returning "id", "userId", "category", "label", "points", "loggedAt"
+        `,
+        [randomUUID(), user.id, category, category, points]
+      );
+
+      const habit = habitResult.rows[0];
+
+      await client.query(
+        `update "User" set "pathScore" = "pathScore" + $1 where "id" = $2`,
+        [points, user.id]
+      );
+
+      const now = new Date();
+      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const yesterdayStart = new Date(todayStart);
+      yesterdayStart.setDate(yesterdayStart.getDate() - 1);
+
+      const existingTodayResult = await client.query(
+        `
+          select 1 from "Habit"
+          where "userId" = $1 and "loggedAt" >= $2 and "id" <> $3
+          limit 1
+        `,
+        [user.id, todayStart, habit.id]
+      );
+
+      if (existingTodayResult.rowCount === 0) {
+        const yesterdayResult = await client.query(
+          `
+            select 1 from "Habit"
+            where "userId" = $1 and "loggedAt" >= $2 and "loggedAt" < $3
+            limit 1
+          `,
+          [user.id, yesterdayStart, todayStart]
+        );
+
+        const newStreak = yesterdayResult.rowCount > 0 ? user.streak + 1 : 1;
+        await client.query(
+          `update "User" set "streak" = $1 where "id" = $2`,
+          [newStreak, user.id]
+        );
+      }
+
+      await client.query('commit');
+      return res.status(201).json(habit);
+    } catch (error) {
+      await client.query('rollback');
+      throw error;
+    } finally {
+      client.release();
     }
-
-    const habit = await prisma.habit.create({
-      data: {
-        userId: user.id,
-        category,
-        label: category,
-        points,
-      },
-    });
-
-    await prisma.user.update({
-      where: { id: user.id },
-      data: { pathScore: { increment: points } },
-    });
-
-    const now = new Date();
-    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const yesterdayStart = new Date(todayStart);
-    yesterdayStart.setDate(yesterdayStart.getDate() - 1);
-
-    const existingTodayHabit = await prisma.habit.findFirst({
-      where: {
-        userId: user.id,
-        loggedAt: { gte: todayStart },
-        id: { not: habit.id },
-      },
-    });
-
-    if (!existingTodayHabit) {
-      const yesterdayHabit = await prisma.habit.findFirst({
-        where: {
-          userId: user.id,
-          loggedAt: { gte: yesterdayStart, lt: todayStart },
-        },
-      });
-
-      const newStreak = yesterdayHabit ? user.streak + 1 : 1;
-      await prisma.user.update({
-        where: { id: user.id },
-        data: { streak: newStreak },
-      });
-    }
-
-    res.status(201).json(habit);
   } catch (error) {
+    console.error('[logHabit] failed', error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -93,24 +122,33 @@ export const getTodayHabits = async (req, res) => {
   try {
     const { userId } = req.params;
 
-    const user = await prisma.user.findUnique({ where: { clerkId: userId } });
-    if (!user) {
+    const userResult = await query(
+      `select "id" from "User" where "clerkId" = $1 limit 1`,
+      [userId]
+    );
+
+    if (userResult.rowCount === 0) {
       return res.status(404).json({ error: 'User not found' });
     }
+
+    const user = userResult.rows[0];
 
     const now = new Date();
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-    const habits = await prisma.habit.findMany({
-      where: {
-        userId: user.id,
-        loggedAt: { gte: todayStart },
-      },
-      orderBy: { loggedAt: 'desc' },
-    });
+    const habitsResult = await query(
+      `
+        select "id", "userId", "category", "label", "points", "loggedAt"
+        from "Habit"
+        where "userId" = $1 and "loggedAt" >= $2
+        order by "loggedAt" desc
+      `,
+      [user.id, todayStart]
+    );
 
-    res.json(habits);
+    res.json(habitsResult.rows);
   } catch (error) {
+    console.error('[getTodayHabits] failed', error);
     res.status(500).json({ error: error.message });
   }
 };

@@ -1,5 +1,5 @@
-import prisma from '../lib/prisma.js';
 import { demoStore } from '../lib/demoData.js';
+import { query } from '../lib/db.js';
 
 export const getScore = async (req, res) => {
   // Demo mode fallback
@@ -10,22 +10,26 @@ export const getScore = async (req, res) => {
   try {
     const { userId } = req.params;
 
-    const user = await prisma.user.findUnique({ where: { clerkId: userId } });
-    if (!user) {
+    const userResult = await query(
+      `select "id", "pathScore", "streak" from "User" where "clerkId" = $1 limit 1`,
+      [userId]
+    );
+
+    if (userResult.rowCount === 0) {
       return res.status(404).json({ error: 'User not found' });
     }
+
+    const user = userResult.rows[0];
 
     const now = new Date();
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-    const todayHabits = await prisma.habit.findMany({
-      where: {
-        userId: user.id,
-        loggedAt: { gte: todayStart },
-      },
-    });
+    const habitsResult = await query(
+      `select coalesce(sum("points"), 0) as "todayScore" from "Habit" where "userId" = $1 and "loggedAt" >= $2`,
+      [user.id, todayStart]
+    );
 
-    const todayScore = todayHabits.reduce((sum, h) => sum + h.points, 0);
+    const todayScore = Number(habitsResult.rows[0]?.todayScore ?? 0);
 
     res.json({
       pathScore: user.pathScore,
@@ -33,6 +37,7 @@ export const getScore = async (req, res) => {
       streak: user.streak,
     });
   } catch (error) {
+    console.error('[getScore] failed', error);
     res.status(500).json({ error: error.message });
   }
 };
