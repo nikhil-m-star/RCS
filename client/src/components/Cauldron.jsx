@@ -8,7 +8,7 @@ export function Cauldron({ score = 0 }) {
   const liquidY = 195 - liquidHeight;
 
   return (
-    <div className="relative mx-auto h-72 w-72 max-w-full">
+    <div className="relative mx-auto h-72 w-72 max-w-full lg:h-[30rem] lg:w-[30rem] xl:h-[34rem] xl:w-[34rem]">
       {/* Glow behind cauldron */}
       <div
         className="absolute inset-0 rounded-full blur-3xl opacity-30"

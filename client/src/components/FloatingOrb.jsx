@@ -6,12 +6,12 @@ export function FloatingOrb({ category, index = 0 }) {
 
   // Semi-random positions around the cauldron
   const positions = [
-    { x: -90, y: -50 },
-    { x: 90, y: -40 },
-    { x: -70, y: 35 },
-    { x: 75, y: 45 },
-    { x: -35, y: -80 },
-    { x: 45, y: -70 },
+    { x: -120, y: -70 },
+    { x: 118, y: -58 },
+    { x: -98, y: 42 },
+    { x: 102, y: 58 },
+    { x: -42, y: -114 },
+    { x: 56, y: -100 },
   ];
 
   const pos = positions[index % positions.length];
