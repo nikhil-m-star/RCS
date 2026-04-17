@@ -3,7 +3,6 @@ import { UserButton } from '../lib/auth.jsx';
 import { useAuth, useUser } from '../lib/authHooks.js';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TetrisStage } from '../components/TetrisStage';
-import { FallingShape } from '../components/FallingShape';
 import { NavBar } from '../components/NavBar';
 import { TetrisFall } from '../components/TetrisFall';
 import { FogBackground } from '../components/FogBackground';
@@ -14,27 +13,6 @@ import { categoryColors } from '../lib/categories.js';
 
 const EMPTY_SCORE = { todayScore: 0, pathScore: 0, streak: 0 };
 
-function getShapesFromHabits(habits) {
-  const colHeights = [0, 0, 0];
-  const colX = [0, 3, 6];
-
-  // We process habits in reverse (oldest first) to build the stack upwards
-  return [...habits].reverse().map((h) => {
-    // Choose column based on category hash or simple rotation
-    const colIdx = h.category.length % 3;
-    const gridX = colX[colIdx];
-    const gridY = colHeights[colIdx];
-    
-    // Increment height for this column (most shapes are 2-3 units tall)
-    colHeights[colIdx] += 2.5;
-
-    return {
-      ...h,
-      gridX,
-      gridY,
-    };
-  }).reverse(); // Reverse back so the newest is at index 0 for the FallingShape
-}
 
 export function Dashboard() {
   const { getToken, userId } = useAuth();
@@ -223,18 +201,12 @@ export function Dashboard() {
             </div>
 
             {/* Tetris Area */}
-            <div className="flex flex-column gap-5">
+            <div className="flex flex-col gap-5">
               <div className="relative">
                 <TetrisStage 
                   score={score.todayScore} 
-                  items={getShapesFromHabits(todayHabits.slice(1))} 
+                  habits={todayHabits} 
                 />
-                {todayHabits.length > 0 && (
-                  <FallingShape 
-                    key={todayHabits[0].id}
-                    item={getShapesFromHabits(todayHabits)[0]} 
-                  />
-                )}
               </div>
 
               <TetrisFall delay={0.5}>
