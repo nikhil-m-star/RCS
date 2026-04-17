@@ -1,11 +1,12 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { SignedIn, SignedOut, SignInButton } from './lib/auth.js';
+import { SignedIn, SignedOut, SignInButton, useAuth } from './lib/auth.js';
 import { motion } from 'framer-motion';
 import { Dashboard } from './pages/Dashboard';
 import { Spellbook } from './pages/Spellbook';
 import { Leaderboard } from './pages/Leaderboard';
 import { PageShell } from './components/PageShell';
 import { TetrisFall } from './components/TetrisFall';
+import { NavBar } from './components/NavBar';
 
 function LandingPage() {
   return (
@@ -20,7 +21,9 @@ function LandingPage() {
       <div className="fog-layer fog-layer-1" />
       <div className="fog-layer fog-layer-2" />
 
-      <TetrisFall delay={0.05} className="z-10 text-center pt-14">
+      <div className="relative z-10 grid min-h-[calc(100vh-6rem)] items-center lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10">
+        <NavBar />
+        <TetrisFall delay={0.05} className="text-center pt-14 lg:pt-0">
         {/* Cauldron icon */}
         <svg width="92" height="92" viewBox="0 0 80 80" fill="none" className="mx-auto mb-8">
           <path
@@ -91,16 +94,33 @@ function LandingPage() {
             Enter
           </motion.a>
         </SignedIn>
-      </TetrisFall>
+        </TetrisFall>
+      </div>
     </PageShell>
   );
 }
 
 function ProtectedRoute({ children }) {
+  const auth = useAuth();
+
+  if ('isLoaded' in auth && auth.isLoaded === false) {
+    return (
+      <PageShell className="flex items-center justify-center">
+        <TetrisFall delay={0.05} className="text-center">
+          <div className="mx-auto h-3 w-3 rounded-full bg-[#7c3aed] shadow-[0_0_24px_rgba(124,58,237,0.8)]" />
+        </TetrisFall>
+      </PageShell>
+    );
+  }
+
+  if ('isSignedIn' in auth && !auth.isSignedIn) {
+    return <Navigate to="/" replace />;
+  }
+
   return (
     <>
       <SignedIn>{children}</SignedIn>
-      <SignedOut><Navigate to="/" /></SignedOut>
+      <SignedOut><Navigate to="/" replace /></SignedOut>
     </>
   );
 }

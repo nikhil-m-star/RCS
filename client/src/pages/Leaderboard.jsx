@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '../lib/auth.js';
+import { useAuth, useUser } from '../lib/auth.js';
 import { motion } from 'framer-motion';
 import { NavBar } from '../components/NavBar';
 import { TetrisFall } from '../components/TetrisFall';
 import { FogBackground } from '../components/FogBackground';
 import { PageShell } from '../components/PageShell';
-import { getLeaderboard, setAuthToken } from '../lib/api';
+import { getLeaderboard, setAuthToken, syncUser } from '../lib/api';
 
 // Demo fallback
 const DEMO_LEADERS = [
@@ -21,6 +21,7 @@ const DEMO_LEADERS = [
 
 export function Leaderboard() {
   const { getToken, userId } = useAuth();
+  const { user } = useUser();
   const [leaders, setLeaders] = useState([]);
 
   useEffect(() => {
@@ -28,6 +29,7 @@ export function Leaderboard() {
       try {
         const token = await getToken();
         setAuthToken(token);
+        await syncUser(user?.username || user?.firstName || 'wanderer');
         const res = await getLeaderboard();
         setLeaders(res.data);
       } catch {
@@ -36,7 +38,7 @@ export function Leaderboard() {
       }
     };
     void load();
-  }, [getToken]);
+  }, [getToken, user?.firstName, user?.username]);
 
   const getGlow = (rank) => {
     const intensity = Math.max(0.6 - rank * 0.05, 0.08);
@@ -47,76 +49,75 @@ export function Leaderboard() {
     <PageShell>
       <FogBackground />
 
-      <div className="relative z-10 pt-4">
-        <TetrisFall delay={0.1}>
-          <h1 className="mb-8 text-center text-[11px] font-bold uppercase tracking-[0.42em]" style={{ color: '#a78bfa' }}>
-            Coven
-          </h1>
-        </TetrisFall>
+      <div className="relative lg:grid lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-10">
+        <NavBar />
 
-        <div className="space-y-3">
-          {leaders.map((leader, i) => {
-            const isCurrentUser = leader.clerkId === userId;
-            const initialRotate = ((i + 1) % 6) - 3;
-            return (
-              <motion.div
-                key={leader.id}
-                className="flex items-center gap-4 rounded-[24px] p-4"
-                style={{
-                  background: isCurrentUser
-                    ? 'linear-gradient(180deg, rgba(62,28,104,0.36), rgba(25,18,40,0.92))'
-                    : 'linear-gradient(180deg, rgba(19,19,29,0.98), rgba(16,16,24,0.98))',
-                  border: `1px solid ${isCurrentUser ? 'rgba(124, 58, 237, 0.4)' : 'rgba(124, 58, 237, 0.08)'}`,
-                  boxShadow: i < 3 ? getGlow(i) : '0 14px 28px rgba(0,0,0,0.22)',
-                }}
-                initial={{ y: '-120vh', opacity: 0, rotate: initialRotate }}
-                animate={{ y: 0, opacity: 1, rotate: 0 }}
-                transition={{
-                  type: 'spring',
-                  damping: 14,
-                  stiffness: 80,
-                  delay: 0.15 + i * 0.08,
-                }}
-              >
-                {/* Rank */}
-                <div
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0"
+        <div className="relative z-10 pt-4 lg:pt-2">
+          <TetrisFall delay={0.1}>
+            <h1 className="mb-8 text-center text-[11px] font-bold uppercase tracking-[0.42em] lg:text-left" style={{ color: '#a78bfa' }}>
+              Coven
+            </h1>
+          </TetrisFall>
+
+          <div className="space-y-3">
+            {leaders.map((leader, i) => {
+              const isCurrentUser = leader.clerkId === userId;
+              const initialRotate = ((i + 1) % 6) - 3;
+              return (
+                <motion.div
+                  key={leader.id}
+                  className="flex items-center gap-4 rounded-[24px] p-4 lg:p-5"
                   style={{
-                    background: i === 0 ? '#7c3aed' : i < 3 ? 'rgba(124, 58, 237, 0.2)' : 'rgba(124, 58, 237, 0.08)',
-                    color: i === 0 ? '#e2e8f0' : '#a78bfa',
-                    boxShadow: i < 3 ? getGlow(i) : 'none',
+                    background: isCurrentUser
+                      ? 'linear-gradient(180deg, rgba(62,28,104,0.36), rgba(25,18,40,0.92))'
+                      : 'linear-gradient(180deg, rgba(19,19,29,0.98), rgba(16,16,24,0.98))',
+                    border: `1px solid ${isCurrentUser ? 'rgba(124, 58, 237, 0.4)' : 'rgba(124, 58, 237, 0.08)'}`,
+                    boxShadow: i < 3 ? getGlow(i) : '0 14px 28px rgba(0,0,0,0.22)',
+                  }}
+                  initial={{ y: '-120vh', opacity: 0, rotate: initialRotate }}
+                  animate={{ y: 0, opacity: 1, rotate: 0 }}
+                  transition={{
+                    type: 'spring',
+                    damping: 14,
+                    stiffness: 80,
+                    delay: 0.15 + i * 0.08,
                   }}
                 >
-                  {i + 1}
+                  <div
+                    className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-sm font-bold"
+                    style={{
+                      background: i === 0 ? '#7c3aed' : i < 3 ? 'rgba(124, 58, 237, 0.2)' : 'rgba(124, 58, 237, 0.08)',
+                      color: i === 0 ? '#e2e8f0' : '#a78bfa',
+                      boxShadow: i < 3 ? getGlow(i) : 'none',
+                    }}
+                  >
+                    {i + 1}
+                  </div>
+
+                  <span
+                    className="flex-1 truncate font-semibold"
+                    style={{ color: isCurrentUser ? '#a78bfa' : '#e2e8f0' }}
+                  >
+                    {leader.username}
+                  </span>
+
+                  <span className="font-bold text-lg" style={{ color: '#a78bfa' }}>
+                    {leader.pathScore}
+                  </span>
+                </motion.div>
+              );
+            })}
+
+            {leaders.length === 0 && (
+              <TetrisFall delay={0.2}>
+                <div className="py-20 text-center text-sm lg:text-left" style={{ color: '#64748b' }}>
+                  The coven is empty
                 </div>
-
-                {/* Username */}
-                <span
-                  className="flex-1 font-semibold truncate"
-                  style={{ color: isCurrentUser ? '#a78bfa' : '#e2e8f0' }}
-                >
-                  {leader.username}
-                </span>
-
-                {/* Score */}
-                <span className="font-bold text-lg" style={{ color: '#a78bfa' }}>
-                  {leader.pathScore}
-                </span>
-              </motion.div>
-            );
-          })}
-
-          {leaders.length === 0 && (
-            <TetrisFall delay={0.2}>
-              <div className="text-center py-20 text-sm" style={{ color: '#64748b' }}>
-                The coven is empty
-              </div>
-            </TetrisFall>
-          )}
+              </TetrisFall>
+            )}
+          </div>
         </div>
       </div>
-
-      <NavBar />
     </PageShell>
   );
 }

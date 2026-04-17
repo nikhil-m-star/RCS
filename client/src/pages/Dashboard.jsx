@@ -79,101 +79,111 @@ export function Dashboard() {
     <PageShell>
       <FogBackground />
 
-      <div className="relative flex min-h-[calc(100vh-6rem)] flex-col items-center justify-between pt-2">
-        <div className="flex w-full items-center justify-between">
-          <TetrisFall delay={0.1}>
-            <div
-              className="rounded-full px-3 py-1.5 text-sm font-semibold"
-              style={{
-                color: '#a78bfa',
-                background: 'rgba(18,18,26,0.88)',
-                border: '1px solid rgba(124, 58, 237, 0.25)',
-                boxShadow: '0 10px 22px rgba(0, 0, 0, 0.26)',
-              }}
-            >
-              {score.streak}d
-            </div>
-          </TetrisFall>
+      <div className="relative lg:grid lg:min-h-[calc(100vh-5rem)] lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-10">
+        <NavBar />
 
-          <TetrisFall delay={0.2}>
-            <div
-              className="rounded-full p-1"
-              style={{
-                background: 'rgba(18,18,26,0.88)',
-                border: '1px solid rgba(124, 58, 237, 0.25)',
-                boxShadow: '0 10px 22px rgba(0, 0, 0, 0.26)',
-              }}
-            >
-              <UserButton afterSignOutUrl="/" />
+        <div className="relative flex min-h-[calc(100vh-6rem)] flex-col pt-2 lg:min-h-0 lg:justify-between lg:pt-0">
+          <div className="flex w-full items-center justify-between">
+            <TetrisFall delay={0.1}>
+              <div
+                className="rounded-full px-3 py-1.5 text-sm font-semibold"
+                style={{
+                  color: '#a78bfa',
+                  background: 'rgba(18,18,26,0.88)',
+                  border: '1px solid rgba(124, 58, 237, 0.25)',
+                  boxShadow: '0 10px 22px rgba(0, 0, 0, 0.26)',
+                }}
+              >
+                {score.streak}d
+              </div>
+            </TetrisFall>
+
+            <TetrisFall delay={0.2}>
+              <div
+                className="rounded-full p-1"
+                style={{
+                  background: 'rgba(18,18,26,0.88)',
+                  border: '1px solid rgba(124, 58, 237, 0.25)',
+                  boxShadow: '0 10px 22px rgba(0, 0, 0, 0.26)',
+                }}
+              >
+                <UserButton afterSignOutUrl="/" />
+              </div>
+            </TetrisFall>
+          </div>
+
+          <div className="mt-6 grid flex-1 items-center gap-10 lg:grid-cols-[minmax(320px,440px)_minmax(0,1fr)] lg:gap-16">
+            <div>
+              <TetrisFall delay={0.26} className="text-left">
+                <motion.div
+                  className="h-2 w-2 rounded-full"
+                  style={{ background: '#7c3aed', boxShadow: '0 0 16px rgba(124,58,237,0.85)' }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0.55, 1, 0.55] }}
+                  transition={{ delay: 0.3 }}
+                />
+                <motion.div
+                  className="mt-4 text-7xl font-bold tracking-[-0.08em] lg:text-8xl"
+                  style={{ color: '#a78bfa' }}
+                  key={score.todayScore}
+                  initial={{ scale: 1.4, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ type: 'spring', damping: 12 }}
+                >
+                  {score.todayScore}
+                </motion.div>
+              </TetrisFall>
+
+              <TetrisFall delay={0.34} className="mt-6">
+                <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+                  <div className="rounded-3xl border p-5" style={{ borderColor: 'rgba(124,58,237,0.14)', background: 'rgba(12,12,18,0.55)' }}>
+                    <div className="text-[11px] uppercase tracking-[0.3em]" style={{ color: '#64748b' }}>Path</div>
+                    <div className="mt-3 text-3xl font-bold tracking-[-0.04em]" style={{ color: '#c4b5fd' }}>{score.pathScore}</div>
+                  </div>
+                  <div className="rounded-3xl border p-5" style={{ borderColor: 'rgba(124,58,237,0.14)', background: 'rgba(12,12,18,0.55)' }}>
+                    <div className="text-[11px] uppercase tracking-[0.3em]" style={{ color: '#64748b' }}>Logged</div>
+                    <div className="mt-3 text-3xl font-bold tracking-[-0.04em]" style={{ color: '#e2e8f0' }}>{loggedCategories.length}</div>
+                  </div>
+                  <div className="rounded-3xl border p-5" style={{ borderColor: 'rgba(124,58,237,0.14)', background: 'rgba(12,12,18,0.55)' }}>
+                    <div className="text-[11px] uppercase tracking-[0.3em]" style={{ color: '#64748b' }}>Streak</div>
+                    <div className="mt-3 text-3xl font-bold tracking-[-0.04em]" style={{ color: '#e2e8f0' }}>{score.streak}</div>
+                  </div>
+                </div>
+              </TetrisFall>
+
+              <TetrisFall delay={0.46} className="mt-8">
+                <motion.button
+                  id="log-habit-btn"
+                  className="cursor-pointer rounded-full border-2 px-14 py-4 text-lg font-bold tracking-[0.28em]"
+                  style={{
+                    background: 'linear-gradient(180deg, #8b5cf6 0%, #6d28d9 100%)',
+                    borderColor: '#c4b5fd',
+                    color: '#f8fafc',
+                    boxShadow: '0 22px 46px rgba(124, 58, 237, 0.34)',
+                  }}
+                  whileHover={{ scale: 1.06, boxShadow: '0 0 50px rgba(124, 58, 237, 0.6)' }}
+                  whileTap={{ scale: 0.94 }}
+                  onClick={() => setShowPanel(true)}
+                >
+                  LOG
+                </motion.button>
+              </TetrisFall>
             </div>
-          </TetrisFall>
+
+            <TetrisFall delay={0.36} className="relative z-10">
+              <div className="relative mx-auto flex min-h-[360px] items-center justify-center lg:min-h-[520px]">
+                <div
+                  className="absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl lg:h-96 lg:w-96"
+                  style={{ background: 'radial-gradient(circle, rgba(124,58,237,0.16), transparent 70%)' }}
+                />
+                <Cauldron score={score.todayScore} />
+                {loggedCategories.map((cat, i) => (
+                  <FloatingOrb key={cat} category={cat} index={i} />
+                ))}
+              </div>
+            </TetrisFall>
+          </div>
         </div>
-
-        <TetrisFall delay={0.26} className="mt-4 text-center">
-          <motion.div
-            className="mx-auto h-2 w-2 rounded-full"
-            style={{ background: '#7c3aed', boxShadow: '0 0 16px rgba(124,58,237,0.85)' }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: [0.55, 1, 0.55] }}
-            transition={{ delay: 0.3 }}
-          />
-          <motion.div
-            className="mt-2 text-6xl font-bold tracking-[-0.06em]"
-            style={{ color: '#a78bfa' }}
-            key={score.todayScore}
-            initial={{ scale: 1.4, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ type: 'spring', damping: 12 }}
-          >
-            {score.todayScore}
-          </motion.div>
-        </TetrisFall>
-
-        <TetrisFall delay={0.36} className="relative z-10 mt-2 flex-1 content-center">
-          <div className="relative mt-2">
-            <div
-              className="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
-              style={{ background: 'radial-gradient(circle, rgba(124,58,237,0.16), transparent 70%)' }}
-            />
-            <Cauldron score={score.todayScore} />
-            {loggedCategories.map((cat, i) => (
-              <FloatingOrb key={cat} category={cat} index={i} />
-            ))}
-          </div>
-        </TetrisFall>
-
-        <TetrisFall delay={0.46} className="z-10 mt-3">
-          <div
-            className="rounded-full px-4 py-2 text-center"
-            style={{
-              background: 'rgba(10,10,15,0.54)',
-              border: '1px solid rgba(124, 58, 237, 0.12)',
-              color: '#8f9db2',
-            }}
-          >
-            <span className="text-sm font-bold tracking-[0.14em]" style={{ color: '#c4b5fd' }}>
-              {score.pathScore}
-            </span>
-          </div>
-        </TetrisFall>
-
-        <TetrisFall delay={0.56} className="z-10 mt-8">
-          <motion.button
-            id="log-habit-btn"
-            className="cursor-pointer rounded-full border-2 px-14 py-4 text-lg font-bold tracking-[0.28em]"
-            style={{
-              background: 'linear-gradient(180deg, #8b5cf6 0%, #6d28d9 100%)',
-              borderColor: '#c4b5fd',
-              color: '#f8fafc',
-              boxShadow: '0 22px 46px rgba(124, 58, 237, 0.34)',
-            }}
-            whileHover={{ scale: 1.06, boxShadow: '0 0 50px rgba(124, 58, 237, 0.6)' }}
-            whileTap={{ scale: 0.94 }}
-            onClick={() => setShowPanel(true)}
-          >
-            LOG
-          </motion.button>
-        </TetrisFall>
       </div>
 
       {/* Habit Panel */}
@@ -186,8 +196,6 @@ export function Dashboard() {
           />
         )}
       </AnimatePresence>
-
-      <NavBar />
     </PageShell>
   );
 }

@@ -7,6 +7,7 @@ export function useDemoAuth() {
     userId: ctx?.userId || null,
     getToken: ctx?.getToken || (async () => 'demo-token'),
     isSignedIn: ctx?.signedIn || false,
+    isLoaded: true,
   };
 }
 

@@ -39,9 +39,9 @@ function CovenNavIcon() {
 }
 
 const navItems = [
-  { path: '/dashboard', icon: CauldronNavIcon, id: 'nav-dashboard' },
-  { path: '/spellbook', icon: ScrollNavIcon, id: 'nav-spellbook' },
-  { path: '/coven', icon: CovenNavIcon, id: 'nav-coven' },
+  { path: '/dashboard', icon: CauldronNavIcon, id: 'nav-dashboard', label: 'Cauldron' },
+  { path: '/spellbook', icon: ScrollNavIcon, id: 'nav-spellbook', label: 'Spellbook' },
+  { path: '/coven', icon: CovenNavIcon, id: 'nav-coven', label: 'Coven' },
 ];
 
 export function NavBar() {
@@ -49,46 +49,111 @@ export function NavBar() {
   const navigate = useNavigate();
 
   return (
-    <motion.nav
-      className="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 gap-2 rounded-full p-2"
-      style={{
-        background: 'rgba(13, 13, 20, 0.8)',
-        backdropFilter: 'blur(20px)',
-        border: '1px solid rgba(167, 139, 250, 0.18)',
-        boxShadow: '0 18px 42px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255,255,255,0.04)',
-      }}
-      initial={{ y: '120vh' }}
-      animate={{ y: 0 }}
-      transition={{ type: 'spring', damping: 15, stiffness: 80, delay: 0.6 }}
-    >
-      {navItems.map((item) => {
-        const isActive = location.pathname === item.path;
-        const Icon = item.icon;
-        return (
-          <motion.button
-            key={item.path}
-            id={item.id}
-            className="relative rounded-full border-none p-3 outline-none cursor-pointer"
-            style={{
-              color: isActive ? '#a78bfa' : '#64748b',
-              background: isActive ? 'linear-gradient(180deg, rgba(124, 58, 237, 0.18), rgba(124, 58, 237, 0.08))' : 'transparent',
-            }}
-            whileHover={{ scale: 1.15, color: '#a78bfa' }}
-            whileTap={{ scale: 0.9 }}
-            onClick={() => navigate(item.path)}
-          >
-            <Icon />
-            {isActive && (
-              <motion.div
-                className="absolute inset-0 rounded-full"
-                style={{ boxShadow: '0 0 15px rgba(124, 58, 237, 0.3)' }}
-                animate={{ opacity: [0.5, 1, 0.5] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              />
-            )}
-          </motion.button>
-        );
-      })}
-    </motion.nav>
+    <>
+      <motion.nav
+        className="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 gap-2 rounded-full p-2 lg:hidden"
+        style={{
+          background: 'rgba(13, 13, 20, 0.8)',
+          backdropFilter: 'blur(20px)',
+          border: '1px solid rgba(167, 139, 250, 0.18)',
+          boxShadow: '0 18px 42px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255,255,255,0.04)',
+        }}
+        initial={{ y: '120vh' }}
+        animate={{ y: 0 }}
+        transition={{ type: 'spring', damping: 15, stiffness: 80, delay: 0.6 }}
+      >
+        {navItems.map((item) => {
+          const isActive = location.pathname === item.path;
+          const Icon = item.icon;
+          return (
+            <motion.button
+              key={item.path}
+              id={item.id}
+              className="relative cursor-pointer rounded-full border-none p-3 outline-none"
+              style={{
+                color: isActive ? '#a78bfa' : '#64748b',
+                background: isActive ? 'linear-gradient(180deg, rgba(124, 58, 237, 0.18), rgba(124, 58, 237, 0.08))' : 'transparent',
+              }}
+              whileHover={{ scale: 1.15, color: '#a78bfa' }}
+              whileTap={{ scale: 0.9 }}
+              onClick={() => navigate(item.path)}
+            >
+              <Icon />
+              {isActive && (
+                <motion.div
+                  className="absolute inset-0 rounded-full"
+                  style={{ boxShadow: '0 0 15px rgba(124, 58, 237, 0.3)' }}
+                  animate={{ opacity: [0.5, 1, 0.5] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                />
+              )}
+            </motion.button>
+          );
+        })}
+      </motion.nav>
+
+      <motion.aside
+        className="hidden lg:flex lg:h-full lg:w-[220px] lg:flex-col lg:justify-between lg:pr-6"
+        initial={{ x: -80, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ type: 'spring', damping: 18, stiffness: 90, delay: 0.1 }}
+      >
+        <div>
+          <div className="mb-10 pt-3">
+            <div className="text-3xl font-bold tracking-[-0.06em]" style={{ color: '#e2e8f0' }}>
+              Foot<span style={{ color: '#a78bfa' }}>prints</span>
+            </div>
+            <div className="mt-2 text-[11px] uppercase tracking-[0.36em]" style={{ color: '#64748b' }}>
+              Path Tracker
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            {navItems.map((item) => {
+              const isActive = location.pathname === item.path;
+              const Icon = item.icon;
+              return (
+                <motion.button
+                  key={item.path}
+                  id={item.id}
+                  className="flex w-full cursor-pointer items-center gap-3 rounded-2xl border px-4 py-3 text-left outline-none"
+                  style={{
+                    color: isActive ? '#e2e8f0' : '#94a3b8',
+                    borderColor: isActive ? 'rgba(167,139,250,0.24)' : 'rgba(255,255,255,0.04)',
+                    background: isActive
+                      ? 'linear-gradient(180deg, rgba(124,58,237,0.24), rgba(124,58,237,0.08))'
+                      : 'rgba(255,255,255,0.01)',
+                    boxShadow: isActive ? '0 18px 36px rgba(124,58,237,0.12)' : 'none',
+                  }}
+                  whileHover={{ scale: 1.01, color: '#e2e8f0' }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => navigate(item.path)}
+                >
+                  <span style={{ color: isActive ? '#c4b5fd' : '#64748b' }}>
+                    <Icon />
+                  </span>
+                  <span className="text-sm font-medium tracking-[0.08em]">{item.label}</span>
+                </motion.button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div
+          className="rounded-3xl border p-4"
+          style={{
+            borderColor: 'rgba(167,139,250,0.14)',
+            background: 'linear-gradient(180deg, rgba(18,18,26,0.65), rgba(10,10,15,0.72))',
+          }}
+        >
+          <div className="text-[11px] uppercase tracking-[0.34em]" style={{ color: '#64748b' }}>
+            Desktop Mode
+          </div>
+          <div className="mt-3 text-sm leading-6" style={{ color: '#cbd5e1' }}>
+            Wider canvas, persistent navigation, and full-page views.
+          </div>
+        </div>
+      </motion.aside>
+    </>
   );
 }

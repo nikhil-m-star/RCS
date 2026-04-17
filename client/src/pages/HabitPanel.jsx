@@ -39,19 +39,19 @@ export function HabitPanel({ onClose, onLogged, loggedCategories = [] }) {
 
       {/* Slide-up panel */}
       <motion.div
-        className="relative z-10 rounded-t-[32px] p-6 pb-24"
+        className="relative z-10 rounded-t-[32px] p-6 pb-24 lg:mb-8 lg:rounded-[32px] lg:pb-8"
         style={{
           background: 'linear-gradient(180deg, rgba(22,22,32,0.98), rgba(14,14,22,0.98))',
-          maxWidth: '430px',
+          maxWidth: '780px',
           margin: '0 auto',
           width: '100%',
           border: '1px solid rgba(167, 139, 250, 0.18)',
-          borderBottom: 'none',
+          borderBottom: '1px solid rgba(167, 139, 250, 0.18)',
           boxShadow: '0 -18px 60px rgba(124, 58, 237, 0.16), inset 0 1px 0 rgba(255,255,255,0.03)',
         }}
-        initial={{ y: '100%' }}
+        initial={{ y: '100%', opacity: 0 }}
         animate={{ y: 0 }}
-        exit={{ y: '100%' }}
+        exit={{ y: '100%', opacity: 0 }}
         transition={{ type: 'spring', damping: 25, stiffness: 200 }}
       >
         {/* Drag handle */}
@@ -61,7 +61,7 @@ export function HabitPanel({ onClose, onLogged, loggedCategories = [] }) {
         />
 
         {/* 3x2 grid of habit tiles */}
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-3 gap-3 lg:grid-cols-6">
           {CATEGORIES.map((cat, i) => (
             <HabitTile
               key={cat}
