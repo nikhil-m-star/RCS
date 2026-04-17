@@ -690,6 +690,49 @@ input {
 /* ============================
    Habit Tiles
    ============================ */
+.habit-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 28px;
+  border-width: 2px;
+  border-style: solid;
+  cursor: pointer;
+  outline: none;
+  background: rgba(22, 22, 32, 0.85);
+  transition: var(--transition-smooth);
+}
+
+.habit-tile-overlay {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  opacity: 0.8;
+}
+
+.habit-tile-inner-border {
+  pointer-events: none;
+  position: absolute;
+  inset: 7px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.habit-tile-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 1rem;
+}
+
+.habit-tile.launching {
+  z-index: 50;
+  pointer-events: none;
+}
 
 /* ============================
    Landing Page & Auth

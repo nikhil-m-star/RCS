@@ -46,7 +46,7 @@ function SettledShape({ item }) {
       style={{
         left: `${item.gridX * 10}%`,
         bottom: `${item.gridY * (100 / 18)}%`,
-        width: '40%', // Assuming max 4 blocks wide
+        width: '40%', 
         height: 'calc(4 * (100% / 18))',
       }}
     >
@@ -54,15 +54,16 @@ function SettledShape({ item }) {
         {blocks.map((b, i) => (
           <div
             key={i}
-            className="absolute rounded-[2px]"
+            className="absolute"
             style={{
               left: `${b.x * 25}%`,
               bottom: `${b.y * 25}%`,
               width: '25%',
               height: '25%',
               background: color,
-              border: '1px solid rgba(255,255,255,0.2)',
-              boxShadow: `inset 0 0 10px rgba(0,0,0,0.3), 0 0 12px ${color}44`,
+              border: '2px solid rgba(255,255,255,0.24)',
+              borderRadius: '2px',
+              boxShadow: `inset 2px 2px 0 rgba(255,255,255,0.3), inset -2px -2px 0 rgba(0,0,0,0.2), 0 0 15px ${color}33`,
             }}
           />
         ))}
@@ -75,16 +76,16 @@ export function getBlocksForCategory(category) {
   switch (category) {
     case 'transport': // T-shape
       return [{x:1,y:0}, {x:0,y:1}, {x:1,y:1}, {x:2,y:1}];
-    case 'water': // I-shape
-      return [{x:1,y:0}, {x:1,y:1}, {x:1,y:2}, {x:1,y:3}];
+    case 'water': // I-shape (Long bar - rotated for variety)
+      return [{x:0,y:1}, {x:1,y:1}, {x:2,y:1}, {x:3,y:1}];
     case 'energy': // L-shape
-      return [{x:1,y:0}, {x:1,y:1}, {x:1,y:2}, {x:2,y:2}];
+      return [{x:0,y:0}, {x:1,y:0}, {x:2,y:0}, {x:2,y:1}];
     case 'food': // O-shape (Square)
-      return [{x:1,y:1}, {x:2,y:1}, {x:1,y:2}, {x:2,y:2}];
+      return [{x:1,y:0}, {x:2,y:0}, {x:1,y:1}, {x:2,y:1}];
     case 'nature': // S-shape
-      return [{x:2,y:0}, {x:1,y:0}, {x:1,y:1}, {x:0,y:1}];
-    case 'waste': // Z-shape
-      return [{x:0,y:0}, {x:1,y:0}, {x:1,y:1}, {x:2,y:1}];
+      return [{x:1,y:0}, {x:2,y:0}, {x:0,y:1}, {x:1,y:1}];
+    case 'waste': // J-shape
+      return [{x:0,y:1}, {x:1,y:1}, {x:2,y:1}, {x:0,y:0}];
     default:
       return [{x:1,y:1}, {x:2,y:1}, {x:1,y:2}, {x:2,y:2}];
   }

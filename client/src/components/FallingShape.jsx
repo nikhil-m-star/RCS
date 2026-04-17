@@ -11,18 +11,16 @@ export function FallingShape({ item, onSettle }) {
       className="absolute"
       style={{
         left: `${item.gridX * 10}%`,
+        bottom: `${item.gridY * (100 / 18)}%`,
         width: '40%',
         height: 'calc(4 * (100% / 18))',
         zIndex: 50,
       }}
-      initial={{ y: -400, opacity: 0 }}
-      animate={{ 
-        y: 650 - (item.gridY * (100 / 18) * 5), // Rough approximation for falling to floor
-        opacity: 1 
-      }}
+      initial={{ y: -600, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
       transition={{ 
-        duration: 0.8, 
-        ease: [0.45, 0, 0.55, 1],
+        duration: 0.65, 
+        ease: [0.16, 1, 0.3, 1], // Custom bounce-out feel
       }}
       onAnimationComplete={() => {
         if (onSettle) onSettle(item);
@@ -32,15 +30,16 @@ export function FallingShape({ item, onSettle }) {
         {blocks.map((b, i) => (
           <div
             key={i}
-            className="absolute rounded-[2px]"
+            className="absolute"
             style={{
               left: `${b.x * 25}%`,
               bottom: `${b.y * 25}%`,
               width: '25%',
               height: '25%',
               background: color,
-              border: '1px solid rgba(255,255,255,0.3)',
-              boxShadow: `0 0 20px ${color}66`,
+              border: '2px solid rgba(255,255,255,0.3)',
+              borderRadius: '2px',
+              boxShadow: `inset 2px 2px 0 rgba(255,255,255,0.4), inset -2px -2px 0 rgba(0,0,0,0.3), 0 0 25px ${color}66`,
             }}
           />
         ))}

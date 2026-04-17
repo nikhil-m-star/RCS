@@ -14,6 +14,14 @@ import { categoryColors } from '../lib/categories.js';
 
 const EMPTY_SCORE = { todayScore: 0, pathScore: 0, streak: 0 };
 
+function getShapesFromHabits(habits) {
+  return habits.map((h, i) => ({
+    ...h,
+    gridX: (i * 2) % 7,
+    gridY: Math.floor(i / 3) * 1.5, // Denser stacking
+  }));
+}
+
 export function Dashboard() {
   const { getToken, userId } = useAuth();
   const { user, isLoaded: isUserLoaded } = useUser();
@@ -200,36 +208,35 @@ export function Dashboard() {
               </div>
             </div>
 
-            {/* Tetris / Secondary Area */}
+            {/* Tetris Area */}
             <div className="flex flex-column gap-5">
               <TetrisFall delay={0.3}>
-                <TetrisStage 
-                  score={score.todayScore} 
-                  items={todayHabits.map((h, i) => ({
-                    ...h,
-                    gridX: (i * 2) % 7,
-                    gridY: Math.floor(i / 3) * 2
-                  }))} 
-                />
+                <div className="relative">
+                  <TetrisStage 
+                    score={score.todayScore} 
+                    items={getShapesFromHabits(todayHabits.slice(1))} 
+                  />
+                  {todayHabits.length > 0 && (
+                    <FallingShape 
+                      key={todayHabits[0].id}
+                      item={{
+                        ...todayHabits[0],
+                        gridX: ((todayHabits.length - 1) * 2) % 7,
+                        gridY: Math.floor((todayHabits.length - 1) / 3) * 1.5
+                      }} 
+                    />
+                  )}
+                </div>
               </TetrisFall>
 
               <TetrisFall delay={0.5}>
                 <div className="metric-panel">
-                  <div className="text-label mb-4">Schools Active</div>
+                  <div className="text-label mb-4">Registry</div>
                   <div className="category-echoes">
                     {categorySummary.map((item) => (
                       <div key={item.category} className="echo-item">
                         <div className="w-2 h-2 rounded-full" style={{ background: item.color }} />
                         <div className="flex-1 text-sm font-bold capitalize">{item.category}</div>
-                        <div className="echo-bar-container">
-                          <div
-                            className="echo-bar"
-                            style={{
-                              width: `${(item.count / Math.max(todayHabits.length, 1)) * 100}%`,
-                              background: item.color,
-                            }}
-                          />
-                        </div>
                         <div className="text-xs font-bold opacity-60">{item.count}</div>
                       </div>
                     ))}
