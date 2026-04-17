@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../lib/auth.js';
 import { motion } from 'framer-motion';
-import { CategoryIcon, categoryColors } from '../components/CategoryIcons';
+import { CategoryIcon } from '../components/CategoryIcons';
+import { categoryColors } from '../lib/categories.js';
 import { NavBar } from '../components/NavBar';
 import { TetrisFall } from '../components/TetrisFall';
 import { FogBackground } from '../components/FogBackground';
@@ -27,13 +28,15 @@ export function Spellbook() {
         setAuthToken(token);
         const res = await api.get(`/habits/${userId}`);
         setHabits(res.data);
-      } catch (err) {
+      } catch {
         console.warn('[Footprints] API unavailable, using demo data');
         setHabits(DEMO_HABITS);
       }
     };
-    if (userId) load();
-  }, [userId]);
+    if (userId) {
+      void load();
+    }
+  }, [getToken, userId]);
 
   return (
     <div className="min-h-screen relative pb-24" style={{ background: '#0a0a0f' }}>

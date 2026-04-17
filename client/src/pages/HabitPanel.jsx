@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useAuth } from '../lib/auth.js';
 import { HabitTile } from '../components/HabitTile';
-import { CATEGORIES } from '../components/CategoryIcons';
+import { CATEGORIES } from '../lib/categories.js';
 import { logHabit, setAuthToken } from '../lib/api';
 
 export function HabitPanel({ onClose, onLogged, loggedCategories = [] }) {
@@ -13,7 +13,7 @@ export function HabitPanel({ onClose, onLogged, loggedCategories = [] }) {
       setAuthToken(token);
       await logHabit(category);
       onLogged();
-    } catch (err) {
+    } catch {
       console.warn('[Footprints] API unavailable, simulating log');
       // Still trigger reload in demo mode
       onLogged();

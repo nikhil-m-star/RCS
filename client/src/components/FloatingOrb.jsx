@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { categoryColors } from './CategoryIcons';
+import { categoryColors } from '../lib/categories.js';
 
 export function FloatingOrb({ category, index = 0 }) {
   const color = categoryColors[category] || '#a78bfa';

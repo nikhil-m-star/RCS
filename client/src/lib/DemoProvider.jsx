@@ -1,14 +1,5 @@
-import { createContext, useContext, useState } from 'react';
-
-// Demo auth context — used when Clerk keys are not configured
-const DemoAuthContext = createContext(null);
-
-const DEMO_USER = {
-  id: 'demo_user_001',
-  firstName: 'Wanderer',
-  username: 'wanderer',
-  imageUrl: null,
-};
+import { useContext, useState } from 'react';
+import { DemoAuthContext, DEMO_USER } from './demoAuthShared.js';
 
 export function DemoAuthProvider({ children }) {
   const [signedIn, setSignedIn] = useState(false);
@@ -28,25 +19,6 @@ export function DemoAuthProvider({ children }) {
   );
 }
 
-// Mock hooks that mirror Clerk's API
-export function useDemoAuth() {
-  const ctx = useContext(DemoAuthContext);
-  return {
-    userId: ctx?.userId || null,
-    getToken: ctx?.getToken || (async () => 'demo-token'),
-    isSignedIn: ctx?.signedIn || false,
-  };
-}
-
-export function useDemoUser() {
-  const ctx = useContext(DemoAuthContext);
-  return {
-    user: ctx?.user || null,
-    isLoaded: true,
-  };
-}
-
-// Mock components
 export function DemoSignedIn({ children }) {
   const ctx = useContext(DemoAuthContext);
   return ctx?.signedIn ? children : null;
@@ -57,7 +29,7 @@ export function DemoSignedOut({ children }) {
   return ctx?.signedIn ? null : children;
 }
 
-export function DemoSignInButton({ children, mode }) {
+export function DemoSignInButton({ children }) {
   const ctx = useContext(DemoAuthContext);
   const handleClick = () => {
     ctx?.setSignedIn(true);
@@ -65,12 +37,7 @@ export function DemoSignInButton({ children, mode }) {
   };
 
   if (children) {
-    // Clone the child element and attach onClick
-    return (
-      <span onClick={handleClick}>
-        {children}
-      </span>
-    );
+    return <span onClick={handleClick}>{children}</span>;
   }
 
   return (
@@ -87,7 +54,9 @@ export function DemoUserButton({ afterSignOutUrl }) {
     <button
       onClick={() => {
         ctx?.setSignedIn(false);
-        if (afterSignOutUrl) window.location.href = afterSignOutUrl;
+        if (afterSignOutUrl) {
+          window.location.href = afterSignOutUrl;
+        }
       }}
       className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold cursor-pointer"
       style={{

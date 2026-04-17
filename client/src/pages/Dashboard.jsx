@@ -35,7 +35,7 @@ export function Dashboard() {
       ]);
       setScore(scoreRes.data);
       setTodayHabits(habitsRes.data);
-    } catch (err) {
+    } catch {
       console.warn('[Footprints] API unavailable, using demo data');
       setScore(DEMO_SCORE);
       setTodayHabits(DEMO_HABITS);
@@ -43,8 +43,34 @@ export function Dashboard() {
   };
 
   useEffect(() => {
-    if (userId) loadData();
-  }, [userId]);
+    if (userId) {
+      const timerId = window.setTimeout(() => {
+        void (async () => {
+          try {
+            const token = await getToken();
+            setAuthToken(token);
+            await syncUser(user?.username || user?.firstName || 'wanderer');
+            const [scoreRes, habitsRes] = await Promise.all([
+              getScore(userId),
+              getTodayHabits(userId),
+            ]);
+            setScore(scoreRes.data);
+            setTodayHabits(habitsRes.data);
+          } catch {
+            console.warn('[Footprints] API unavailable, using demo data');
+            setScore(DEMO_SCORE);
+            setTodayHabits(DEMO_HABITS);
+          }
+        })();
+      }, 0);
+
+      return () => {
+        window.clearTimeout(timerId);
+      };
+  }
+
+    return undefined;
+  }, [getToken, user?.firstName, user?.username, userId]);
 
   const loggedCategories = [...new Set(todayHabits.map((h) => h.category))];
 

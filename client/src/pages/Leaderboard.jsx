@@ -29,13 +29,13 @@ export function Leaderboard() {
         setAuthToken(token);
         const res = await getLeaderboard();
         setLeaders(res.data);
-      } catch (err) {
+      } catch {
         console.warn('[Footprints] API unavailable, using demo data');
         setLeaders(DEMO_LEADERS);
       }
     };
-    load();
-  }, []);
+    void load();
+  }, [getToken]);
 
   const getGlow = (rank) => {
     const intensity = Math.max(0.6 - rank * 0.05, 0.08);
@@ -56,6 +56,7 @@ export function Leaderboard() {
         <div className="space-y-3">
           {leaders.map((leader, i) => {
             const isCurrentUser = leader.clerkId === userId;
+            const initialRotate = ((i + 1) % 6) - 3;
             return (
               <motion.div
                 key={leader.id}
@@ -65,7 +66,7 @@ export function Leaderboard() {
                   border: `1px solid ${isCurrentUser ? 'rgba(124, 58, 237, 0.4)' : 'rgba(124, 58, 237, 0.08)'}`,
                   boxShadow: i < 3 ? getGlow(i) : 'none',
                 }}
-                initial={{ y: '-120vh', opacity: 0, rotate: Math.random() * 6 - 3 }}
+                initial={{ y: '-120vh', opacity: 0, rotate: initialRotate }}
                 animate={{ y: 0, opacity: 1, rotate: 0 }}
                 transition={{
                   type: 'spring',

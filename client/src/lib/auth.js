@@ -5,13 +5,16 @@ let useAuthHook, useUserHook, SignedInComp, SignedOutComp, SignInButtonComp, Use
 
 if (isDemoMode) {
   // Lazy-loaded at module level for demo
-  const demo = await import('./DemoProvider.jsx');
-  useAuthHook = demo.useDemoAuth;
-  useUserHook = demo.useDemoUser;
-  SignedInComp = demo.DemoSignedIn;
-  SignedOutComp = demo.DemoSignedOut;
-  SignInButtonComp = demo.DemoSignInButton;
-  UserButtonComp = demo.DemoUserButton;
+  const [demoHooks, demoComponents] = await Promise.all([
+    import('./demoAuthHooks.js'),
+    import('./DemoProvider.jsx'),
+  ]);
+  useAuthHook = demoHooks.useDemoAuth;
+  useUserHook = demoHooks.useDemoUser;
+  SignedInComp = demoComponents.DemoSignedIn;
+  SignedOutComp = demoComponents.DemoSignedOut;
+  SignInButtonComp = demoComponents.DemoSignInButton;
+  UserButtonComp = demoComponents.DemoUserButton;
 } else {
   const clerk = await import('@clerk/clerk-react');
   useAuthHook = clerk.useAuth;

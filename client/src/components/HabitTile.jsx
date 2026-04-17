@@ -1,8 +1,10 @@
 import { motion } from 'framer-motion';
-import { CategoryIcon, categoryColors } from './CategoryIcons';
+import { CategoryIcon } from './CategoryIcons';
+import { categoryColors } from '../lib/categories.js';
 
 export function HabitTile({ category, onLog, delay = 0, isLogged = false }) {
   const color = categoryColors[category] || '#a78bfa';
+  const initialRotate = ((category.charCodeAt(0) + delay * 100) % 20) - 10;
 
   return (
     <motion.button
@@ -12,7 +14,7 @@ export function HabitTile({ category, onLog, delay = 0, isLogged = false }) {
         borderColor: isLogged ? color : '#7c3aed40',
         color: isLogged ? color : '#a78bfa',
       }}
-      initial={{ y: '-120vh', opacity: 0, rotate: Math.random() * 20 - 10 }}
+      initial={{ y: '-120vh', opacity: 0, rotate: initialRotate }}
       animate={{
         y: 0,
         opacity: 1,
