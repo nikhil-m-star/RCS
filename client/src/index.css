@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
 /* ============================
    Base Utilities
    ============================ */
@@ -77,7 +79,7 @@
   --color-text-primary: #f8fafc;
   --color-text-secondary: #e2e8f0;
   --color-text-muted: #64748b;
-  --font-sans: 'Space Grotesk', sans-serif;
+  --font-sans: 'Outfit', sans-serif;
 
   /* Glassmorphism Defaults */
   --glass-bg: rgba(18, 18, 27, 0.85);
