@@ -233,11 +233,7 @@ export function Dashboard() {
                   {todayHabits.length > 0 && (
                     <FallingShape 
                       key={todayHabits[0].id}
-                      item={{
-                        ...todayHabits[0],
-                        gridX: ((todayHabits.length - 1) * 2) % 7,
-                        gridY: Math.floor((todayHabits.length - 1) / 3) * 1.5
-                      }} 
+                      item={getShapesFromHabits(todayHabits)[0]} 
                     />
                   )}
                 </div>

@@ -42,8 +42,9 @@ export function FallingShape({ item, onSettle }) {
             <div 
               className="tetris-block-jewel"
               style={{ 
-                background: `linear-gradient(135deg, ${color}, ${color}dd)`,
-                boxShadow: `0 0 30px ${color}44`
+                backgroundColor: color,
+                background: `linear-gradient(135deg, ${color}, ${color}cc)`,
+                boxShadow: `0 0 35px ${color}55`
               }} 
             />
           </div>

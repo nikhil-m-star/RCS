@@ -45,6 +45,7 @@ function SettledShape({ item }) {
         bottom: `${item.gridY * (100 / 18)}%`,
         width: '40%', 
         height: 'calc(4 * (100% / 18))',
+        zIndex: 10,
       }}
     >
       <div className="relative w-full h-full">
@@ -63,8 +64,9 @@ function SettledShape({ item }) {
             <div 
               className="tetris-block-jewel"
               style={{ 
-                background: `linear-gradient(135deg, ${color}, ${color}dd)`,
-                boxShadow: `0 0 20px ${color}33`
+                backgroundColor: color,
+                background: `linear-gradient(135deg, ${color}, ${color}cc)`,
+                boxShadow: `0 0 25px ${color}33`
               }} 
             />
           </div>
