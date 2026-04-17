@@ -11,16 +11,19 @@ export function FallingShape({ item, onSettle }) {
       className="absolute"
       style={{
         left: `${item.gridX * 10}%`,
-        bottom: `${item.gridY * (100 / 18)}%`,
-        width: '40%',
-        height: 'calc(4 * (100% / 18))',
+        bottom: '100%', 
+        width: '40%', 
+        height: '22.22%', 
         zIndex: 50,
       }}
-      initial={{ y: -600, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
+      initial={{ bottom: '100%', opacity: 0 }}
+      animate={{ 
+        bottom: `${item.gridY * (100 / 18)}%`,
+        opacity: 1 
+      }}
       transition={{ 
-        duration: 0.65, 
-        ease: [0.16, 1, 0.3, 1], // Custom bounce-out feel
+        duration: 0.82, 
+        ease: [0.16, 1, 0.3, 1],
       }}
       onAnimationComplete={() => {
         if (onSettle) onSettle(item);

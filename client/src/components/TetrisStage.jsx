@@ -44,8 +44,8 @@ function SettledShape({ item }) {
         left: `${item.gridX * 10}%`,
         bottom: `${item.gridY * (100 / 18)}%`,
         width: '40%', 
-        height: 'calc(4 * (100% / 18))',
-        zIndex: 10,
+        height: '22.22%', 
+        zIndex: 25,
       }}
     >
       <div className="relative w-full h-full">
