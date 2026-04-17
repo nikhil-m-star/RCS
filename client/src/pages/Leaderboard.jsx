@@ -56,9 +56,7 @@ export function Leaderboard() {
 
           <div className="relative z-10 pt-4 lg:pt-2">
             <TetrisFall delay={0.1}>
-              <h1 className="text-label mb-8 text-center lg:text-left">
-                Coven
-              </h1>
+              <div className="text-label mb-8">GLOBAL RANKING</div>
             </TetrisFall>
 
             {loadError && (

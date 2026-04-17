@@ -90,10 +90,10 @@ export function NavBar() {
         <div>
           <div className="nav-logo-section">
             <div className="nav-logo-text">
-              Foot<span className="nav-logo-accent">prints</span>
+              Eco<span>Tetris</span>
             </div>
             <div className="text-label mt-2">
-              Coven Console
+              Console
             </div>
           </div>
 
@@ -123,10 +123,10 @@ export function NavBar() {
         <div className="nav-footer-card">
           <div className="nav-footer-status text-label">
             <span className="status-dot" />
-            Desktop Flow
+            Live Sync
           </div>
-          <div className="mt-3 text-sm leading-6" style={{ color: '#cbd5e1' }}>
-            Persistent navigation, larger data panels, and faster page scanning.
+          <div className="mt-2 text-xs font-medium opacity-60">
+            Real-time block updates active.
           </div>
         </div>
       </motion.aside>

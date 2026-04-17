@@ -73,28 +73,25 @@ function LandingPage() {
                 </div>
 
                 <h1 className="hero-title">
-                  Foot<span>prints</span>
+                  Eco<span>Tetris</span>
                 </h1>
 
                 <p className="hero-description">
-                  A desktop-first ritual board for logging sustainable habits, watching today&apos;s score rise,
-                  and climbing the coven ranking without losing the magical feel.
+                  Build your eco-legacy one block at a time.
                 </p>
 
                 <div className="feature-grid">
                   {[
-                    ['Today', "Live cauldron fill tied to today's score"],
-                    ['History', 'Spellbook timeline with category echoes'],
-                    ['Coven', 'Leaderboard sorted by total path score'],
+                    ['Grid', 'Watch your actions stack up.'],
+                    ['History', 'Analyze your past spells.'],
+                    ['Coven', 'Rise through the rankings.'],
                   ].map(([title, body], index) => (
                     <div
                       key={title}
                       className={`feature-card ${index === 0 ? 'active' : ''}`}
                     >
-                      <div className="text-label">
-                        {title}
-                      </div>
-                      <div className="mt-4 text-sm leading-7" style={{ color: '#e2e8f0' }}>
+                      <div className="text-label">{title}</div>
+                      <div className="mt-2 text-sm font-medium" style={{ color: '#e2e8f0' }}>
                         {body}
                       </div>
                     </div>

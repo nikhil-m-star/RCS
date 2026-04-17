@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { UserButton } from '../lib/auth.jsx';
 import { useAuth, useUser } from '../lib/authHooks.js';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Cauldron } from '../components/Cauldron';
-import { FloatingOrb } from '../components/FloatingOrb';
+import { TetrisStage } from '../components/TetrisStage';
+import { FallingShape } from '../components/FallingShape';
 import { NavBar } from '../components/NavBar';
 import { TetrisFall } from '../components/TetrisFall';
 import { FogBackground } from '../components/FogBackground';
@@ -96,13 +96,13 @@ export function Dashboard() {
         <div className="dashboard-grid">
           <NavBar />
 
-          <div className="dashboard-main-content dashboard-grid">
-            {/* Status & Stats Section */}
-            <div className="dashboard-stats-section">
-              <div className="flex-between" style={{ marginBottom: '1.5rem' }}>
+          <div className="dashboard-main-area">
+            {/* Main Action Area */}
+            <div className="flex flex-column gap-6">
+              <div className="flex-between">
                 <TetrisFall delay={0.1}>
-                  <div className="glass-pill px-3 py-1.5 text-sm font-semibold" style={{ color: '#a78bfa' }}>
-                    {score.streak}d
+                  <div className="glass-pill px-4 py-2 text-sm font-bold" style={{ color: '#a78bfa' }}>
+                    STREAK {score.streak}D
                   </div>
                 </TetrisFall>
 
@@ -114,163 +114,125 @@ export function Dashboard() {
               </div>
 
               <TetrisFall delay={0.26}>
-                <div className="metric-panel" style={{ background: 'linear-gradient(180deg, rgba(16,16,24,0.72), rgba(10,10,16,0.78))' }}>
-                  <div className="flex-between">
+                <div className="metric-panel">
+                  <div className="flex-between items-end">
                     <div>
+                      <div className="text-label">Today's Brew</div>
                       <motion.div
-                        className="badge-dot"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: [0.55, 1, 0.55] }}
-                        transition={{ delay: 0.3 }}
-                      />
-                      <motion.div
-                        className="score-value"
-                        style={{ color: '#a78bfa', marginTop: '1rem' }}
+                        className="text-6xl font-bold tracking-tight mt-2"
+                        style={{ color: '#f5f3ff' }}
                         key={score.todayScore}
-                        initial={{ scale: 1.4, opacity: 0 }}
+                        initial={{ scale: 1.2, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
-                        transition={{ type: 'spring', damping: 12 }}
                       >
                         {score.todayScore}
                       </motion.div>
-                      <div className="score-label" style={{ marginTop: '0.75rem' }}>
-                        {loadError ? 'Waiting for live path' : 'Today&apos;s brew'}
-                      </div>
                     </div>
 
-                    <div className="glass-pill px-5 py-4 hidden lg-block">
-                      <div className="text-label">Active</div>
-                      <div className="text-3xl font-bold tracking-[-0.04em]" style={{ color: '#e2e8f0', marginTop: '0.5rem' }}>
+                    <div className="hidden lg-block text-right">
+                      <div className="text-label">Active Schools</div>
+                      <div className="text-3xl font-bold mt-1" style={{ color: '#e2e8f0' }}>
                         {loggedCategories.length}
                       </div>
                     </div>
                   </div>
 
-                  <div className="activity-grid mt-8" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+                  <div className="grid grid-cols-3 gap-3 mt-8">
                     <div className="glass-pill p-4">
-                      <div className="text-label" style={{ fontSize: '10px' }}>Path</div>
-                      <div className="text-2xl font-bold mt-2" style={{ color: '#c4b5fd' }}>{score.pathScore}</div>
+                      <div className="text-label">Path</div>
+                      <div className="text-2xl font-bold mt-1" style={{ color: '#c4b5fd' }}>{score.pathScore}</div>
                     </div>
                     <div className="glass-pill p-4">
-                      <div className="text-label" style={{ fontSize: '10px' }}>Logged</div>
-                      <div className="text-2xl font-bold mt-2" style={{ color: '#e2e8f0' }}>{loggedCategories.length}</div>
+                      <div className="text-label">Logged</div>
+                      <div className="text-2xl font-bold mt-1">{loggedCategories.length}</div>
                     </div>
                     <div className="glass-pill p-4">
-                      <div className="text-label" style={{ fontSize: '10px' }}>Streak</div>
-                      <div className="text-2xl font-bold mt-2" style={{ color: '#e2e8f0' }}>{score.streak}</div>
+                      <div className="text-label">Level</div>
+                      <div className="text-2xl font-bold mt-1">{Math.floor(score.pathScore / 100) + 1}</div>
                     </div>
                   </div>
                 </div>
               </TetrisFall>
 
-              {loadError && (
-                <TetrisFall delay={0.38} className="mt-5">
-                  <div className="error-banner">
-                    {loadError}. Sign in again or check the backend connection.
-                  </div>
-                </TetrisFall>
-              )}
-
-              <TetrisFall delay={0.46} className="mt-8 flex-center">
+              <TetrisFall delay={0.46} className="flex-center">
                 <motion.button
                   id="log-habit-btn"
-                  className="btn-primary px-14 py-4"
-                  whileHover={{ scale: 1.06, boxShadow: '0 0 50px rgba(124, 58, 237, 0.6)' }}
-                  whileTap={{ scale: 0.94 }}
+                  className="btn-primary px-16 py-5"
+                  whileHover={{ scale: 1.05, boxShadow: '0 0 40px rgba(124, 58, 237, 0.4)' }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={() => setShowPanel(true)}
                   disabled={!isUserLoaded}
                 >
-                  LOG
+                  CAST SPELL
                 </motion.button>
               </TetrisFall>
 
-              <TetrisFall delay={0.4} className="mt-8">
-                <div className="metric-panel">
-                  <div className="flex-between">
-                    <div className="text-label" style={{ letterSpacing: '0.32em' }}>Recent casts</div>
-                    <div className="text-label" style={{ letterSpacing: '0.3em' }}>{todayHabits.length}</div>
-                  </div>
-                  <div className="activity-grid">
-                    {recentHabits.length === 0 ? (
-                      <div className="activity-card flex-center" style={{ padding: '1.5rem 1rem', color: '#64748b', textAlign: 'center' }}>
-                        {loadError ? 'No live activity yet' : 'Nothing logged yet'}
-                      </div>
-                    ) : (
-                      recentHabits.map((habit) => (
-                        <div key={habit.id} className="activity-card">
-                          <div className="flex-between">
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                              <div
-                                className="status-dot"
-                                style={{ 
-                                  background: categoryColors[habit.category] || '#a78bfa', 
-                                  boxShadow: `0 0 14px ${categoryColors[habit.category] || '#a78bfa'}` 
-                                }}
-                              />
-                              <div className="text-sm font-medium capitalize" style={{ color: '#e2e8f0' }}>{habit.category}</div>
-                            </div>
-                            <div className="text-sm font-bold" style={{ color: '#c4b5fd' }}>+{habit.points}</div>
-                          </div>
-                        </div>
-                      ))
-                    )}
-                  </div>
+              <div className="metric-panel">
+                <div className="flex-between">
+                  <div className="text-label">Recent Casts</div>
+                  <div className="text-sm font-semibold opacity-60">{todayHabits.length}</div>
                 </div>
-              </TetrisFall>
-            </div>
-
-            <div className="order-1 lg:order-2">
-              <TetrisFall delay={0.3} className="relative z-10">
-                <div className="cauldron-panel">
-                  <div className="cauldron-panel-glow" />
-                  <div className="text-label">Cauldron View</div>
-                  <div className="mt-2 text-sm leading-6" style={{ color: '#cbd5e1' }}>
-                    A cleaner desktop stage for your daily score, active categories, and the next habit you want to cast.
-                  </div>
-
-                  <div className="cauldron-stage">
-                    <div
-                      className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
-                      style={{ 
-                        background: 'radial-gradient(circle, rgba(124,58,237,0.18), transparent 70%)',
-                        width: 'min(80vw, 30rem)',
-                        height: 'min(80vw, 30rem)'
-                      }}
-                    />
-                    <Cauldron score={score.todayScore} />
-                    {loggedCategories.map((cat, i) => (
-                      <FloatingOrb key={cat} category={cat} index={i} />
-                    ))}
-                  </div>
-                </div>
-              </TetrisFall>
-
-              <TetrisFall delay={0.5} className="mt-5">
-                <div className="metric-panel">
-                  <div className="text-label" style={{ letterSpacing: '0.32em' }}>Category echoes</div>
-                  <div className="category-echoes">
-                    {categorySummary.length === 0 ? (
-                      <div className="activity-card flex-center" style={{ padding: '1.5rem 1rem', color: '#64748b', textAlign: 'center' }}>
-                        {loadError ? 'Connect live data to see category activity.' : 'Categories appear here after the first log.'}
-                      </div>
-                    ) : (
-                      categorySummary.map((item) => (
-                        <div key={item.category} className="echo-item">
-                          <div className="status-dot" style={{ background: item.color, boxShadow: `0 0 14px ${item.color}` }} />
-                          <div className="min-w-[84px] text-sm capitalize" style={{ color: '#e2e8f0' }}>{item.category}</div>
-                          <div className="echo-bar-container">
+                <div className="activity-grid">
+                  {recentHabits.length === 0 ? (
+                    <div className="activity-card flex-center py-10 opacity-40">
+                      No live activity
+                    </div>
+                  ) : (
+                    recentHabits.map((habit) => (
+                      <div key={habit.id} className="activity-card">
+                        <div className="flex-between">
+                          <div className="flex items-center gap-3">
                             <div
-                              className="echo-bar"
-                              style={{
-                                width: `${Math.max((item.count / Math.max(todayHabits.length, 1)) * 100, 14)}%`,
-                                background: `linear-gradient(90deg, ${item.color}, ${item.color}66)`,
+                              className="w-2 h-2 rounded-full"
+                              style={{ 
+                                background: categoryColors[habit.category] || '#a78bfa', 
+                                boxShadow: `0 0 10px ${categoryColors[habit.category] || '#a78bfa'}` 
                               }}
                             />
+                            <div className="text-sm font-bold capitalize">{habit.category}</div>
                           </div>
-                          <div className="w-6 text-right text-sm font-bold" style={{ color: '#c4b5fd' }}>{item.count}</div>
+                          <div className="text-sm font-bold" style={{ color: '#c4b5fd' }}>+{habit.points}</div>
                         </div>
-                      ))
-                    )}
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Tetris / Secondary Area */}
+            <div className="flex flex-column gap-5">
+              <TetrisFall delay={0.3}>
+                <TetrisStage 
+                  score={score.todayScore} 
+                  items={todayHabits.map((h, i) => ({
+                    ...h,
+                    gridX: (i * 2) % 7,
+                    gridY: Math.floor(i / 3) * 2
+                  }))} 
+                />
+              </TetrisFall>
+
+              <TetrisFall delay={0.5}>
+                <div className="metric-panel">
+                  <div className="text-label mb-4">Schools Active</div>
+                  <div className="category-echoes">
+                    {categorySummary.map((item) => (
+                      <div key={item.category} className="echo-item">
+                        <div className="w-2 h-2 rounded-full" style={{ background: item.color }} />
+                        <div className="flex-1 text-sm font-bold capitalize">{item.category}</div>
+                        <div className="echo-bar-container">
+                          <div
+                            className="echo-bar"
+                            style={{
+                              width: `${(item.count / Math.max(todayHabits.length, 1)) * 100}%`,
+                              background: item.color,
+                            }}
+                          />
+                        </div>
+                        <div className="text-xs font-bold opacity-60">{item.count}</div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </TetrisFall>
@@ -278,6 +240,7 @@ export function Dashboard() {
           </div>
         </div>
       </div>
+
 
       {/* Habit Panel */}
       <AnimatePresence>

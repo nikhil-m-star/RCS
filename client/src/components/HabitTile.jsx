@@ -85,7 +85,12 @@ export function HabitTile({ category, onLog, delay = 0, isLogged = false }) {
           boxShadow: `inset 0 0 22px ${color}12`,
         }}
       />
-      <CategoryIcon category={category} size={40} />
+      <div className="flex-center flex-column" style={{ position: 'relative', zIndex: 10, gap: '0.75rem' }}>
+        <CategoryIcon category={category} size={36} />
+        <span className="text-xs font-bold capitalize tracking-[0.14em] opacity-80">
+          {category}
+        </span>
+      </div>
 
       {/* Logged glow pulse */}
       {(isLogged || isLaunching) && (

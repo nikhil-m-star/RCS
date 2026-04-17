@@ -49,12 +49,8 @@ export function HabitPanel({ onClose, onLogged, loggedCategories = [] }) {
       >
         <div className="habit-panel-header">
           <div>
-            <div className="text-label">
-              Cast
-            </div>
-            <div className="text-title" style={{ marginTop: '0.5rem' }}>
-              Choose a habit
-            </div>
+            <div className="text-label">New Spell</div>
+            <div className="text-title" style={{ marginTop: '0.25rem' }}>Select Category</div>
           </div>
 
           <button

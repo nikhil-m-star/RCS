@@ -134,15 +134,11 @@ export function Spellbook() {
                 </div>
 
                 <h1 className="text-display mt-5" style={{ fontSize: 'min(12vw, 4rem)' }}>
-                  Today&apos;s cast history,
-                  <span className="block" style={{ color: '#a78bfa' }}>
-                    organized like a real ledger.
-                  </span>
+                  Cast History.
                 </h1>
 
                 <p className="mt-4 max-w-2xl text-body">
-                  {profileName}&apos;s latest eco-actions live here with timestamps, category streaks, and a cleaner
-                  breakdown of how today&apos;s points were earned.
+                  Your eco-actions, tracked and verified.
                 </p>
               </TetrisFall>
 
@@ -334,18 +330,16 @@ export function Spellbook() {
 
                 <TetrisFall delay={0.44}>
                   <div className="metric-panel">
-                    <div className="text-label">Reading Notes</div>
+                    <div className="text-label">Archive Notes</div>
                     <div className="mt-4 flex flex-col gap-3">
-                      <div className="activity-card text-sm leading-6" style={{ color: '#cbd5e1' }}>
-                        The spellbook now loads cleanly with real data first and drops to demo history only if the backend
-                        is unavailable.
+                      <div className="activity-card text-sm font-medium">
+                        Real-time verification active.
                       </div>
-                      <div className="activity-card text-sm leading-6" style={{ color: '#cbd5e1' }}>
-                        Entries are sorted newest first so your latest action is always visible at the top.
+                      <div className="activity-card text-sm font-medium">
+                        Newest entries at top.
                       </div>
-                      <div className="activity-card text-sm leading-6" style={{ color: '#cbd5e1' }}>
-                        Summary tiles and school totals make the page useful even before you scroll through the full
-                        timeline.
+                      <div className="activity-card text-sm font-medium">
+                        Points audit complete.
                       </div>
                     </div>
                   </div>
