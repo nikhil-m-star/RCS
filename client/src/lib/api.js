@@ -16,6 +16,10 @@ export const setAuthToken = (token) => {
 };
 
 export const syncUser = (username) => api.post('/users/sync', { username });
+export const registerWithPassword = ({ username, password }) =>
+  api.post('/auth/register', { username, password });
+export const loginWithPassword = ({ username, password }) =>
+  api.post('/auth/login', { username, password });
 export const logHabit = (category) => api.post('/habits', { category });
 export const getTodayHabits = (userId) => api.get(`/habits/${userId}`);
 export const getScore = (userId) => api.get(`/score/${userId}`);

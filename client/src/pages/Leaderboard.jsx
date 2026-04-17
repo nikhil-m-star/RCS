@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useAuth, useUser } from '../lib/auth.js';
+import { useAuth, useUser } from '../lib/authHooks.js';
 import { motion } from 'framer-motion';
 import { NavBar } from '../components/NavBar';
 import { TetrisFall } from '../components/TetrisFall';

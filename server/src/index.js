@@ -6,6 +6,8 @@ import habitRoutes from './routes/habits.js';
 import scoreRoutes from './routes/score.js';
 import leaderboardRoutes from './routes/leaderboard.js';
 import userRoutes from './routes/users.js';
+import authRoutes from './routes/auth.js';
+import { ensureAuthTables } from './lib/initDb.js';
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -27,11 +29,19 @@ app.get('/api/health', (req, res) => {
 });
 
 // Footprints Routes
+app.use('/api/auth', authRoutes);
 app.use('/api/habits', habitRoutes);
 app.use('/api/score', scoreRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
 app.use('/api/users', userRoutes);
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
-});
+ensureAuthTables()
+  .then(() => {
+    app.listen(port, () => {
+      console.log(`Server running at http://localhost:${port}`);
+    });
+  })
+  .catch((error) => {
+    console.error('[Footprints] Failed to initialize auth tables', error);
+    process.exit(1);
+  });

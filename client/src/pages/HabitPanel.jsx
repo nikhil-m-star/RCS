@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useAuth } from '../lib/auth.js';
+import { useAuth } from '../lib/authHooks.js';
 import { HabitTile } from '../components/HabitTile';
 import { CATEGORIES } from '../lib/categories.js';
 import { getApiErrorMessage, logHabit, setAuthToken } from '../lib/api';

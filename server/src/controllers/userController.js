@@ -13,7 +13,7 @@ export const syncUser = async (req, res) => {
 
   try {
     if (!userId) {
-      return res.status(401).json({ error: 'Unauthorized: missing Clerk user ID' });
+      return res.status(401).json({ error: 'Unauthorized: missing authenticated user ID' });
     }
 
     const result = await query(

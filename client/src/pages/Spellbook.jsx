@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
-import { useAuth, useUser, UserButton } from '../lib/auth.js';
+import { UserButton } from '../lib/auth.jsx';
+import { useAuth, useUser } from '../lib/authHooks.js';
 import { CategoryIcon } from '../components/CategoryIcons';
 import { FogBackground } from '../components/FogBackground';
 import { NavBar } from '../components/NavBar';

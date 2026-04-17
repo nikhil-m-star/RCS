@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useAuth, useUser, UserButton } from '../lib/auth.js';
+import { UserButton } from '../lib/auth.jsx';
+import { useAuth, useUser } from '../lib/authHooks.js';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Cauldron } from '../components/Cauldron';
 import { FloatingOrb } from '../components/FloatingOrb';
