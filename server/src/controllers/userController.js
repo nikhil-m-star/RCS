@@ -1,10 +1,16 @@
 import prisma from '../lib/prisma.js';
+import { demoStore } from '../lib/demoData.js';
 
 export const syncUser = async (req, res) => {
-  try {
-    const { userId } = req.auth;
-    const { username } = req.body;
+  const { userId } = req.auth;
+  const { username } = req.body;
 
+  // Check if we are in demo mode (no DB URL)
+  if (!process.env.DATABASE_URL) {
+    return res.json(demoStore.syncUser(username));
+  }
+
+  try {
     const user = await prisma.user.upsert({
       where: { clerkId: userId },
       update: { username: username || 'wanderer' },

@@ -1,6 +1,12 @@
 import prisma from '../lib/prisma.js';
+import { demoStore } from '../lib/demoData.js';
 
 export const getScore = async (req, res) => {
+  // Demo mode fallback
+  if (!process.env.DATABASE_URL) {
+    return res.json(demoStore.getScore());
+  }
+
   try {
     const { userId } = req.params;
 
@@ -9,7 +15,6 @@ export const getScore = async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    // Calculate today's score
     const now = new Date();
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 

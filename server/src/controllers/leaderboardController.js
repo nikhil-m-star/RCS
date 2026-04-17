@@ -1,6 +1,12 @@
 import prisma from '../lib/prisma.js';
+import { demoStore } from '../lib/demoData.js';
 
 export const getLeaderboard = async (req, res) => {
+  // Demo mode fallback
+  if (!process.env.DATABASE_URL) {
+    return res.json(demoStore.getLeaderboard());
+  }
+
   try {
     const top10 = await prisma.user.findMany({
       orderBy: { pathScore: 'desc' },

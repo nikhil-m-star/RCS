@@ -1,4 +1,5 @@
 import prisma from '../lib/prisma.js';
+import { demoStore } from '../lib/demoData.js';
 
 const CATEGORY_POINTS = {
   transport: 15,
@@ -10,9 +11,19 @@ const CATEGORY_POINTS = {
 };
 
 export const logHabit = async (req, res) => {
+  const { category } = req.body;
+
+  // Demo mode fallback
+  if (!process.env.DATABASE_URL) {
+    if (!CATEGORY_POINTS[category]) {
+      return res.status(400).json({ error: 'Invalid category' });
+    }
+    const habit = demoStore.logHabit(category);
+    return res.status(201).json(habit);
+  }
+
   try {
     const { userId } = req.auth;
-    const { category } = req.body;
 
     if (!CATEGORY_POINTS[category]) {
       return res.status(400).json({ error: 'Invalid category' });
@@ -20,13 +31,11 @@ export const logHabit = async (req, res) => {
 
     const points = CATEGORY_POINTS[category];
 
-    // Find user by clerkId
     const user = await prisma.user.findUnique({ where: { clerkId: userId } });
     if (!user) {
       return res.status(404).json({ error: 'User not found. Sync first.' });
     }
 
-    // Create habit
     const habit = await prisma.habit.create({
       data: {
         userId: user.id,
@@ -36,19 +45,16 @@ export const logHabit = async (req, res) => {
       },
     });
 
-    // Update pathScore
     await prisma.user.update({
       where: { id: user.id },
       data: { pathScore: { increment: points } },
     });
 
-    // Streak logic
     const now = new Date();
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const yesterdayStart = new Date(todayStart);
     yesterdayStart.setDate(yesterdayStart.getDate() - 1);
 
-    // Check if user already logged today (excluding current habit)
     const existingTodayHabit = await prisma.habit.findFirst({
       where: {
         userId: user.id,
@@ -57,7 +63,6 @@ export const logHabit = async (req, res) => {
       },
     });
 
-    // Only update streak if this is the first habit of the day
     if (!existingTodayHabit) {
       const yesterdayHabit = await prisma.habit.findFirst({
         where: {
@@ -80,6 +85,11 @@ export const logHabit = async (req, res) => {
 };
 
 export const getTodayHabits = async (req, res) => {
+  // Demo mode fallback
+  if (!process.env.DATABASE_URL) {
+    return res.json(demoStore.getHabits());
+  }
+
   try {
     const { userId } = req.params;
 

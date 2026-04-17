@@ -1,5 +1,5 @@
 import express from 'express';
-import { requireAuth } from '@clerk/express';
+import { requireAuth } from '../lib/auth.js';
 import { syncUser } from '../controllers/userController.js';
 
 const router = express.Router();

@@ -1,5 +1,5 @@
 import express from 'express';
-import { requireAuth } from '@clerk/express';
+import { requireAuth } from '../lib/auth.js';
 import { logHabit, getTodayHabits } from '../controllers/habitController.js';
 
 const router = express.Router();
