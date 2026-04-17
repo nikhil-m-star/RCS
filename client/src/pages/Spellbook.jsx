@@ -188,7 +188,7 @@ export function Spellbook() {
               </TetrisFall>
             )}
 
-            <div className="mt-12 grid flex-1 gap-8 xl:grid-cols-[minmax(0,1.35fr)_360px]">
+            <div className="mt-12 flex flex-col gap-10">
               <TetrisFall delay={0.32}>
                 <div className="cauldron-panel" style={{ padding: '2rem' }}>
                   <div className="cauldron-panel-glow" />
