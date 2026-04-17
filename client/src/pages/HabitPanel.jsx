@@ -39,15 +39,15 @@ export function HabitPanel({ onClose, onLogged, loggedCategories = [] }) {
 
       {/* Slide-up panel */}
       <motion.div
-        className="relative z-10 rounded-t-3xl p-6 pb-24"
+        className="relative z-10 rounded-t-[32px] p-6 pb-24"
         style={{
-          background: '#12121a',
+          background: 'linear-gradient(180deg, rgba(22,22,32,0.98), rgba(14,14,22,0.98))',
           maxWidth: '430px',
           margin: '0 auto',
           width: '100%',
-          border: '1px solid rgba(124, 58, 237, 0.15)',
+          border: '1px solid rgba(167, 139, 250, 0.18)',
           borderBottom: 'none',
-          boxShadow: '0 -8px 40px rgba(124, 58, 237, 0.1)',
+          boxShadow: '0 -18px 60px rgba(124, 58, 237, 0.16), inset 0 1px 0 rgba(255,255,255,0.03)',
         }}
         initial={{ y: '100%' }}
         animate={{ y: 0 }}
@@ -56,8 +56,8 @@ export function HabitPanel({ onClose, onLogged, loggedCategories = [] }) {
       >
         {/* Drag handle */}
         <div
-          className="w-10 h-1 rounded-full mx-auto mb-8"
-          style={{ background: 'rgba(124, 58, 237, 0.3)' }}
+          className="mx-auto mb-8 h-1 w-14 rounded-full"
+          style={{ background: 'linear-gradient(90deg, rgba(124,58,237,0.14), rgba(167,139,250,0.7), rgba(124,58,237,0.14))' }}
         />
 
         {/* 3x2 grid of habit tiles */}

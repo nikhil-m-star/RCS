@@ -8,12 +8,18 @@ export function Cauldron({ score = 0 }) {
   const liquidY = 195 - liquidHeight;
 
   return (
-    <div className="relative w-64 h-64 mx-auto">
+    <div className="relative mx-auto h-72 w-72 max-w-full">
       {/* Glow behind cauldron */}
       <div
         className="absolute inset-0 rounded-full blur-3xl opacity-30"
         style={{
           background: `radial-gradient(circle, rgba(124,58,237,${0.1 + fillPercent * 0.004}) 0%, transparent 70%)`,
+        }}
+      />
+      <div
+        className="absolute left-1/2 top-1/2 h-48 w-48 -translate-x-1/2 -translate-y-1/2 rounded-full blur-2xl"
+        style={{
+          background: 'radial-gradient(circle, rgba(167,139,250,0.16), transparent 68%)',
         }}
       />
 
@@ -37,6 +43,11 @@ export function Cauldron({ score = 0 }) {
             <feTurbulence type="turbulence" baseFrequency="0.03" numOctaves="4" result="noise" />
             <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" />
           </filter>
+          <radialGradient id="emberGlow" cx="50%" cy="40%" r="65%">
+            <stop offset="0%" stopColor="#c4b5fd" stopOpacity="0.95" />
+            <stop offset="55%" stopColor="#8b5cf6" stopOpacity="0.5" />
+            <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0" />
+          </radialGradient>
         </defs>
 
         {/* Legs */}
@@ -80,6 +91,19 @@ export function Cauldron({ score = 0 }) {
               ],
             }}
             transition={{ duration: 2.5, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' }}
+          />
+        )}
+
+        {fillPercent > 0 && (
+          <motion.ellipse
+            cx="120"
+            cy={liquidY + 83}
+            rx="46"
+            ry="11"
+            fill="url(#emberGlow)"
+            clipPath="url(#cauldronInterior)"
+            animate={{ opacity: [0.55, 0.88, 0.55] }}
+            transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}
           />
         )}
 

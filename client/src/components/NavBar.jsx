@@ -50,12 +50,12 @@ export function NavBar() {
 
   return (
     <motion.nav
-      className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex gap-2 p-2 rounded-full"
+      className="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 gap-2 rounded-full p-2"
       style={{
-        background: 'rgba(18, 18, 26, 0.92)',
+        background: 'rgba(13, 13, 20, 0.8)',
         backdropFilter: 'blur(20px)',
-        border: '1px solid rgba(124, 58, 237, 0.2)',
-        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
+        border: '1px solid rgba(167, 139, 250, 0.18)',
+        boxShadow: '0 18px 42px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255,255,255,0.04)',
       }}
       initial={{ y: '120vh' }}
       animate={{ y: 0 }}
@@ -68,10 +68,10 @@ export function NavBar() {
           <motion.button
             key={item.path}
             id={item.id}
-            className="relative p-3 rounded-full cursor-pointer border-none outline-none"
+            className="relative rounded-full border-none p-3 outline-none cursor-pointer"
             style={{
               color: isActive ? '#a78bfa' : '#64748b',
-              background: isActive ? 'rgba(124, 58, 237, 0.15)' : 'transparent',
+              background: isActive ? 'linear-gradient(180deg, rgba(124, 58, 237, 0.18), rgba(124, 58, 237, 0.08))' : 'transparent',
             }}
             whileHover={{ scale: 1.15, color: '#a78bfa' }}
             whileTap={{ scale: 0.9 }}

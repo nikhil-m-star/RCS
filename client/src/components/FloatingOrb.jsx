@@ -27,13 +27,13 @@ export function FloatingOrb({ category, index = 0 }) {
       }}
       initial={{ scale: 0, opacity: 0 }}
       animate={{
-        scale: 1,
         opacity: 1,
         y: [0, -10, 0, 6, 0],
         x: [0, 4, 0, -4, 0],
+        scale: [0, 1, 1.05, 0.96, 1],
       }}
       transition={{
-        scale: { delay: 0.5 + index * 0.15, duration: 0.4 },
+        scale: { duration: 3.4 + index * 0.25, repeat: Infinity, ease: 'easeInOut', delay: 0.5 + index * 0.15 },
         opacity: { delay: 0.5 + index * 0.15, duration: 0.4 },
         y: { duration: 3 + index * 0.4, repeat: Infinity, ease: 'easeInOut', delay: index * 0.2 },
         x: { duration: 4 + index * 0.3, repeat: Infinity, ease: 'easeInOut', delay: index * 0.3 },

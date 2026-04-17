@@ -4,13 +4,12 @@ import { motion } from 'framer-motion';
 import { Dashboard } from './pages/Dashboard';
 import { Spellbook } from './pages/Spellbook';
 import { Leaderboard } from './pages/Leaderboard';
+import { PageShell } from './components/PageShell';
+import { TetrisFall } from './components/TetrisFall';
 
 function LandingPage() {
   return (
-    <div
-      className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden"
-      style={{ background: '#0a0a0f' }}
-    >
+    <PageShell className="flex items-center justify-center">
       {/* Background glow */}
       <div
         className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full pointer-events-none"
@@ -21,14 +20,9 @@ function LandingPage() {
       <div className="fog-layer fog-layer-1" />
       <div className="fog-layer fog-layer-2" />
 
-      <motion.div
-        className="text-center z-10"
-        initial={{ y: '-120vh', opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ type: 'spring', damping: 15, stiffness: 60 }}
-      >
+      <TetrisFall delay={0.05} className="z-10 text-center pt-14">
         {/* Cauldron icon */}
-        <svg width="80" height="80" viewBox="0 0 80 80" fill="none" className="mx-auto mb-6">
+        <svg width="92" height="92" viewBox="0 0 80 80" fill="none" className="mx-auto mb-8">
           <path
             d="M15,30 Q12,65 40,68 Q68,65 65,30"
             fill="#12121a" stroke="#7c3aed" strokeWidth="2.5"
@@ -54,11 +48,11 @@ function LandingPage() {
           />
         </svg>
 
-        <h1 className="text-5xl font-bold mb-4" style={{ color: '#e2e8f0' }}>
+        <h1 className="mb-4 text-5xl font-bold tracking-[-0.05em]" style={{ color: '#e2e8f0' }}>
           Foot<span style={{ color: '#a78bfa' }}>prints</span>
         </h1>
 
-        <p className="text-base mb-10 max-w-xs mx-auto" style={{ color: '#64748b' }}>
+        <p className="mx-auto mb-10 max-w-xs text-sm uppercase tracking-[0.32em]" style={{ color: '#64748b' }}>
           Brew your path. Track your trace.
         </p>
 
@@ -66,12 +60,12 @@ function LandingPage() {
           <SignInButton mode="modal" fallbackRedirectUrl="/dashboard" signUpFallbackRedirectUrl="/dashboard">
             <motion.button
               id="landing-enter-btn"
-              className="px-10 py-3 rounded-full text-lg font-bold border-2 cursor-pointer"
+              className="cursor-pointer rounded-full border-2 px-10 py-3 text-lg font-bold"
               style={{
-                background: '#7c3aed',
+                background: 'linear-gradient(180deg, #8b5cf6 0%, #6d28d9 100%)',
                 borderColor: '#a78bfa',
                 color: '#e2e8f0',
-                boxShadow: '0 0 30px rgba(124,58,237,0.4)',
+                boxShadow: '0 16px 40px rgba(124,58,237,0.32)',
               }}
               whileHover={{ scale: 1.06, boxShadow: '0 0 50px rgba(124,58,237,0.6)' }}
               whileTap={{ scale: 0.94 }}
@@ -84,12 +78,12 @@ function LandingPage() {
         <SignedIn>
           <motion.a
             href="/dashboard"
-            className="inline-block px-10 py-3 rounded-full text-lg font-bold border-2 no-underline"
+            className="inline-block rounded-full border-2 px-10 py-3 text-lg font-bold no-underline"
             style={{
-              background: '#7c3aed',
+              background: 'linear-gradient(180deg, #8b5cf6 0%, #6d28d9 100%)',
               borderColor: '#a78bfa',
               color: '#e2e8f0',
-              boxShadow: '0 0 30px rgba(124,58,237,0.4)',
+              boxShadow: '0 16px 40px rgba(124,58,237,0.32)',
             }}
             whileHover={{ scale: 1.06, boxShadow: '0 0 50px rgba(124,58,237,0.6)' }}
             whileTap={{ scale: 0.94 }}
@@ -97,8 +91,8 @@ function LandingPage() {
             Enter
           </motion.a>
         </SignedIn>
-      </motion.div>
-    </div>
+      </TetrisFall>
+    </PageShell>
   );
 }
 

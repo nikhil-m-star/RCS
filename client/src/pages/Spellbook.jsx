@@ -6,6 +6,7 @@ import { categoryColors } from '../lib/categories.js';
 import { NavBar } from '../components/NavBar';
 import { TetrisFall } from '../components/TetrisFall';
 import { FogBackground } from '../components/FogBackground';
+import { PageShell } from '../components/PageShell';
 import { api, setAuthToken } from '../lib/api';
 
 // Demo fallback
@@ -39,14 +40,14 @@ export function Spellbook() {
   }, [getToken, userId]);
 
   return (
-    <div className="min-h-screen relative pb-24" style={{ background: '#0a0a0f' }}>
+    <PageShell>
       <FogBackground />
 
-      <div className="relative z-10 max-w-[430px] mx-auto px-4 pt-10">
+      <div className="relative z-10 pt-4">
         {/* Title */}
         <TetrisFall delay={0.1}>
           <h1
-            className="text-2xl font-bold mb-8 text-center"
+            className="mb-8 text-center text-[11px] font-bold uppercase tracking-[0.42em]"
             style={{ color: '#a78bfa' }}
           >
             Spellbook
@@ -73,7 +74,8 @@ export function Spellbook() {
                 key={habit.id}
                 className="relative pl-14 pb-6"
                 initial={{ y: '-120vh', opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
+                whileInView={{ y: 0, opacity: 1 }}
+                viewport={{ once: true, amount: 0.25 }}
                 transition={{
                   type: 'spring',
                   damping: 15,
@@ -93,10 +95,11 @@ export function Spellbook() {
 
                 {/* Card */}
                 <div
-                  className="rounded-xl p-4"
+                  className="rounded-[24px] p-4"
                   style={{
-                    background: '#12121a',
-                    border: '1px solid rgba(124, 58, 237, 0.12)',
+                    background: 'linear-gradient(180deg, rgba(19,19,29,0.98), rgba(16,16,24,0.98))',
+                    border: '1px solid rgba(124, 58, 237, 0.14)',
+                    boxShadow: '0 16px 30px rgba(0,0,0,0.24), inset 0 1px 0 rgba(255,255,255,0.03)',
                   }}
                 >
                   <div className="flex items-center justify-between">
@@ -123,6 +126,6 @@ export function Spellbook() {
       </div>
 
       <NavBar />
-    </div>
+    </PageShell>
   );
 }

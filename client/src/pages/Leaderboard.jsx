@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { NavBar } from '../components/NavBar';
 import { TetrisFall } from '../components/TetrisFall';
 import { FogBackground } from '../components/FogBackground';
+import { PageShell } from '../components/PageShell';
 import { getLeaderboard, setAuthToken } from '../lib/api';
 
 // Demo fallback
@@ -43,12 +44,12 @@ export function Leaderboard() {
   };
 
   return (
-    <div className="min-h-screen relative pb-24" style={{ background: '#0a0a0f' }}>
+    <PageShell>
       <FogBackground />
 
-      <div className="relative z-10 max-w-[430px] mx-auto px-4 pt-10">
+      <div className="relative z-10 pt-4">
         <TetrisFall delay={0.1}>
-          <h1 className="text-2xl font-bold mb-8 text-center" style={{ color: '#a78bfa' }}>
+          <h1 className="mb-8 text-center text-[11px] font-bold uppercase tracking-[0.42em]" style={{ color: '#a78bfa' }}>
             Coven
           </h1>
         </TetrisFall>
@@ -60,11 +61,13 @@ export function Leaderboard() {
             return (
               <motion.div
                 key={leader.id}
-                className="flex items-center gap-4 rounded-xl p-4"
+                className="flex items-center gap-4 rounded-[24px] p-4"
                 style={{
-                  background: isCurrentUser ? 'rgba(124, 58, 237, 0.1)' : '#12121a',
+                  background: isCurrentUser
+                    ? 'linear-gradient(180deg, rgba(62,28,104,0.36), rgba(25,18,40,0.92))'
+                    : 'linear-gradient(180deg, rgba(19,19,29,0.98), rgba(16,16,24,0.98))',
                   border: `1px solid ${isCurrentUser ? 'rgba(124, 58, 237, 0.4)' : 'rgba(124, 58, 237, 0.08)'}`,
-                  boxShadow: i < 3 ? getGlow(i) : 'none',
+                  boxShadow: i < 3 ? getGlow(i) : '0 14px 28px rgba(0,0,0,0.22)',
                 }}
                 initial={{ y: '-120vh', opacity: 0, rotate: initialRotate }}
                 animate={{ y: 0, opacity: 1, rotate: 0 }}
@@ -114,6 +117,6 @@ export function Leaderboard() {
       </div>
 
       <NavBar />
-    </div>
+    </PageShell>
   );
 }
