@@ -1098,25 +1098,63 @@ input {
   grid-template-rows: repeat(18, 1fr);
 }
 
-.tetris-block {
+.tetris-stage {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(18, 1fr);
+  width: 100%;
+  max-width: 300px;
+  aspect-ratio: 10 / 18;
+  background: radial-gradient(circle at 50% 50%, #0d0d14 0%, #050508 100%);
+  border: 1px solid rgba(124, 58, 237, 0.28);
+  border-radius: 1.5rem;
+  overflow: hidden;
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.9), inset 0 0 34px rgba(124, 58, 237, 0.08);
+}
+
+.tetris-stage::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  background-size: 100% 2px, 3px 100%;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.tetris-grid-line {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 10% 5.555%; 
+}
+
+.tetris-block-jewel {
   width: 100%;
   height: 100%;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 2px;
+  border-radius: 3px;
+  position: relative;
+  box-shadow: 
+    inset 2px 2px 0 rgba(255, 255, 255, 0.35),
+    inset -2px -2px 0 rgba(0, 0, 0, 0.4),
+    0 0 15px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
 }
 
-.tetromino {
+.tetris-block-jewel::after {
+  content: '';
   position: absolute;
-  display: grid;
-  gap: 1px;
-}
-
-/* 4x4 Grid for all tetrominoes simplified */
-.tetromino-shape {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(4, 1fr);
-  width: calc(4 * (100% / 10));
+  top: 10%;
+  left: 10%;
+  width: 30%;
+  height: 30%;
+  background: rgba(255, 255, 255, 0.4);
+  filter: blur(2px);
+  border-radius: 50%;
 }
 
 .category-echoes {

@@ -36,12 +36,17 @@ export function FallingShape({ item, onSettle }) {
               bottom: `${b.y * 25}%`,
               width: '25%',
               height: '25%',
-              background: color,
-              border: '2px solid rgba(255,255,255,0.3)',
-              borderRadius: '2px',
-              boxShadow: `inset 2px 2px 0 rgba(255,255,255,0.4), inset -2px -2px 0 rgba(0,0,0,0.3), 0 0 25px ${color}66`,
+              padding: '1px',
             }}
-          />
+          >
+            <div 
+              className="tetris-block-jewel"
+              style={{ 
+                background: `linear-gradient(135deg, ${color}, ${color}dd)`,
+                boxShadow: `0 0 30px ${color}44`
+              }} 
+            />
+          </div>
         ))}
       </div>
     </motion.div>

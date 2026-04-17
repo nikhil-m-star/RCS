@@ -15,18 +15,25 @@ import { categoryColors } from '../lib/categories.js';
 const EMPTY_SCORE = { todayScore: 0, pathScore: 0, streak: 0 };
 
 function getShapesFromHabits(habits) {
-  return habits.map((h, i) => {
-    // Deterministic "randomness" based on ID or index
-    const seed = h.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    const randX = (seed % 7);
-    const randY = (i * 1.8) + (seed % 10) / 10;
+  const colHeights = [0, 0, 0];
+  const colX = [0, 3, 6];
+
+  // We process habits in reverse (oldest first) to build the stack upwards
+  return [...habits].reverse().map((h) => {
+    // Choose column based on category hash or simple rotation
+    const colIdx = h.category.length % 3;
+    const gridX = colX[colIdx];
+    const gridY = colHeights[colIdx];
     
+    // Increment height for this column (most shapes are 2-3 units tall)
+    colHeights[colIdx] += 2.5;
+
     return {
       ...h,
-      gridX: randX,
-      gridY: randY,
+      gridX,
+      gridY,
     };
-  });
+  }).reverse(); // Reverse back so the newest is at index 0 for the FallingShape
 }
 
 export function Dashboard() {

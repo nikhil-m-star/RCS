@@ -20,11 +20,8 @@ export function TetrisStage({ score = 0, items = [] }) {
       </div>
 
       <div className="tetris-stage">
-        {/* Background Grid Lines */}
-        {Array.from({ length: rows * cols }).map((_, i) => (
-          <div key={`bg-${i}`} className="tetris-block" style={{ opacity: 0.15 }} />
-        ))}
-
+        <div className="tetris-grid-line" />
+        
         {/* Settled Items */}
         {items.map((item, idx) => (
           <SettledShape key={`${item.id}-${idx}`} item={item} />
@@ -60,12 +57,17 @@ function SettledShape({ item }) {
               bottom: `${b.y * 25}%`,
               width: '25%',
               height: '25%',
-              background: color,
-              border: '2px solid rgba(255,255,255,0.24)',
-              borderRadius: '2px',
-              boxShadow: `inset 2px 2px 0 rgba(255,255,255,0.3), inset -2px -2px 0 rgba(0,0,0,0.2), 0 0 15px ${color}33`,
+              padding: '1px',
             }}
-          />
+          >
+            <div 
+              className="tetris-block-jewel"
+              style={{ 
+                background: `linear-gradient(135deg, ${color}, ${color}dd)`,
+                boxShadow: `0 0 20px ${color}33`
+              }} 
+            />
+          </div>
         ))}
       </div>
     </div>
