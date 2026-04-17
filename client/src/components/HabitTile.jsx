@@ -37,7 +37,7 @@ export function HabitTile({ category, onLog, delay = 0, isLogged = false }) {
   return (
     <motion.button
       ref={tileRef}
-      className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-[28px] border-2 cursor-pointer"
+      className={`habit-tile ${isLaunching ? 'launching' : ''}`.trim()}
       style={{
         background: isLogged ? `${color}18` : 'linear-gradient(180deg, rgba(26,26,38,0.98), rgba(18,18,26,0.98))',
         borderColor: isLogged ? color : '#7c3aed40',
@@ -74,15 +74,14 @@ export function HabitTile({ category, onLog, delay = 0, isLogged = false }) {
       disabled={isLogged || isLaunching}
     >
       <div
-        className="pointer-events-none absolute inset-0 opacity-80"
+        className="habit-tile-overlay"
         style={{
           background: `radial-gradient(circle at 30% 22%, ${color}28, transparent 38%), linear-gradient(180deg, transparent, rgba(255,255,255,0.02))`,
         }}
       />
       <div
-        className="pointer-events-none absolute inset-[7px] rounded-[22px]"
+        className="habit-tile-inner-border"
         style={{
-          border: '1px solid rgba(255,255,255,0.04)',
           boxShadow: `inset 0 0 22px ${color}12`,
         }}
       />
@@ -91,7 +90,7 @@ export function HabitTile({ category, onLog, delay = 0, isLogged = false }) {
       {/* Logged glow pulse */}
       {(isLogged || isLaunching) && (
         <motion.div
-          className="absolute inset-0 rounded-2xl"
+          className="habit-tile-glow"
           style={{ background: `radial-gradient(circle, ${color}20, transparent)` }}
           animate={{ opacity: [0.3, 0.6, 0.3] }}
           transition={{ duration: 2, repeat: Infinity }}

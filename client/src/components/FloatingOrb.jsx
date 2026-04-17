@@ -18,7 +18,7 @@ export function FloatingOrb({ category, index = 0 }) {
 
   return (
     <motion.div
-      className="absolute w-5 h-5 rounded-full"
+      className="floating-orb"
       style={{
         background: `radial-gradient(circle, ${color}, ${color}40, transparent)`,
         boxShadow: `0 0 16px ${color}, 0 0 32px ${color}30`,

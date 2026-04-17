@@ -118,222 +118,138 @@ export function Spellbook() {
 
   return (
     <PageShell>
-      <FogBackground />
+      <div className="container" style={{ paddingTop: '1.25rem' }}>
+        <div className="dashboard-grid">
+          <NavBar />
 
-      <div className="relative lg:grid lg:min-h-[calc(100vh-5rem)] lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-10">
-        <NavBar />
-
-        <div className="relative z-10 flex min-h-[calc(100vh-6rem)] flex-col pt-2 lg:min-h-0 lg:pt-0">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-            <TetrisFall delay={0.08} className="max-w-3xl">
-              <div
-                className="inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.34em]"
-                style={{
-                  color: '#c4b5fd',
-                  borderColor: 'rgba(167,139,250,0.2)',
-                  background: 'rgba(16, 16, 24, 0.72)',
-                  boxShadow: '0 14px 28px rgba(0,0,0,0.22)',
-                }}
-              >
-                <span
-                  className="h-2 w-2 rounded-full"
-                  style={{ background: '#a78bfa', boxShadow: '0 0 18px rgba(167,139,250,0.9)' }}
-                />
-                Spellbook Archive
-              </div>
-
-              <h1
-                className="mt-5 text-4xl font-bold tracking-[-0.07em] sm:text-5xl lg:text-6xl"
-                style={{ color: '#f5f3ff' }}
-              >
-                Today&apos;s cast history,
-                <span className="block" style={{ color: '#a78bfa' }}>
-                  organized like a real ledger.
-                </span>
-              </h1>
-
-              <p className="mt-4 max-w-2xl text-sm leading-7 sm:text-base" style={{ color: '#94a3b8' }}>
-                {profileName}&apos;s latest eco-actions live here with timestamps, category streaks, and a cleaner
-                breakdown of how today&apos;s points were earned.
-              </p>
-            </TetrisFall>
-
-            <TetrisFall delay={0.15}>
-              <div className="flex items-center justify-between gap-3 lg:justify-end">
-                <div
-                  className="rounded-full border px-4 py-2 text-sm font-semibold"
-                  style={{
-                    color: '#e2e8f0',
-                    borderColor: 'rgba(167,139,250,0.2)',
-                    background: 'rgba(16, 16, 24, 0.76)',
-                  }}
-                >
-                  {mostRecentHabit ? `Last cast ${formatRelativeTime(mostRecentHabit.loggedAt)}` : 'Ready to log'}
+          <div className="relative z-10 flex flex-col pt-2">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+              <TetrisFall delay={0.08} className="max-w-3xl">
+                <div className="glass-pill px-3 py-1.5 inline-flex items-center gap-2">
+                  <span
+                    className="status-dot"
+                    style={{ background: '#a78bfa', boxShadow: '0 0 18px rgba(167,139,250,0.9)' }}
+                  />
+                  <span className="text-label" style={{ color: '#c4b5fd' }}>Spellbook Archive</span>
                 </div>
-                <div
-                  className="rounded-full p-1"
-                  style={{
-                    background: 'rgba(18,18,26,0.88)',
-                    border: '1px solid rgba(124, 58, 237, 0.25)',
-                    boxShadow: '0 10px 22px rgba(0, 0, 0, 0.26)',
-                  }}
-                >
-                  <UserButton afterSignOutUrl="/" />
-                </div>
-              </div>
-            </TetrisFall>
-          </div>
 
-          <TetrisFall delay={0.22} className="mt-8">
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-              {[
-                { label: 'Points today', value: totalPoints, accent: '#c4b5fd' },
-                { label: 'Casts logged', value: habits.length, accent: '#f5f3ff' },
-                { label: 'Schools active', value: activeCategories.length, accent: '#93c5fd' },
-                {
-                  label: 'Top school',
-                  value: highlightedCategory ? highlightedCategory.category : 'None',
-                  accent: highlightedCategory?.color || '#fca5a5',
-                },
-              ].map((card) => (
-                <div
-                  key={card.label}
-                  className="relative overflow-hidden rounded-[28px] border p-5"
-                  style={{
-                    borderColor: 'rgba(167,139,250,0.14)',
-                    background: 'linear-gradient(180deg, rgba(18,18,27,0.92), rgba(10,10,16,0.9))',
-                    boxShadow: '0 18px 42px rgba(0,0,0,0.24)',
-                  }}
-                >
-                  <div className="text-[11px] uppercase tracking-[0.32em]" style={{ color: '#64748b' }}>
-                    {card.label}
+                <h1 className="text-display mt-5" style={{ fontSize: 'min(12vw, 4rem)' }}>
+                  Today&apos;s cast history,
+                  <span className="block" style={{ color: '#a78bfa' }}>
+                    organized like a real ledger.
+                  </span>
+                </h1>
+
+                <p className="mt-4 max-w-2xl text-body">
+                  {profileName}&apos;s latest eco-actions live here with timestamps, category streaks, and a cleaner
+                  breakdown of how today&apos;s points were earned.
+                </p>
+              </TetrisFall>
+
+              <TetrisFall delay={0.15}>
+                <div className="flex items-center justify-between gap-3 lg:justify-end">
+                  <div className="glass-pill px-4 py-2 text-sm font-semibold">
+                    {mostRecentHabit ? `Last cast ${formatRelativeTime(mostRecentHabit.loggedAt)}` : 'Ready to log'}
                   </div>
-                  <div
-                    className="mt-4 text-3xl font-bold capitalize tracking-[-0.05em] sm:text-4xl"
-                    style={{ color: card.accent }}
-                  >
-                    {card.value}
+                  <div className="glass-pill p-1">
+                    <UserButton afterSignOutUrl="/" />
                   </div>
                 </div>
-              ))}
+              </TetrisFall>
             </div>
-          </TetrisFall>
 
-          {loadError && (
-            <TetrisFall delay={0.28} className="mt-5">
-              <div
-                className="rounded-[26px] border px-5 py-4 text-sm leading-6"
-                style={{
-                  borderColor: 'rgba(251, 191, 36, 0.18)',
-                  background: 'rgba(54, 35, 10, 0.24)',
-                  color: '#fde68a',
-                }}
-              >
-                {loadError}. Demo entries are filling the page so the spellbook still stays usable while the backend
-                is down.
+            <TetrisFall delay={0.22} className="mt-12">
+              <div className="activity-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))' }}>
+                {[
+                  { label: 'Points today', value: totalPoints, accent: '#c4b5fd' },
+                  { label: 'Casts logged', value: habits.length, accent: '#f5f3ff' },
+                  { label: 'Schools active', value: activeCategories.length, accent: '#93c5fd' },
+                  {
+                    label: 'Top school',
+                    value: highlightedCategory ? highlightedCategory.category : 'None',
+                    accent: highlightedCategory?.color || '#fca5a5',
+                  },
+                ].map((card) => (
+                  <div key={card.label} className="metric-panel">
+                    <div className="text-label">{card.label}</div>
+                    <div
+                      className="mt-4 text-3xl font-bold capitalize tracking-[-0.05em]"
+                      style={{ color: card.accent }}
+                    >
+                      {card.value}
+                    </div>
+                  </div>
+                ))}
               </div>
             </TetrisFall>
-          )}
 
-          <div className="mt-8 grid flex-1 gap-5 xl:grid-cols-[minmax(0,1.35fr)_360px]">
-            <TetrisFall delay={0.32}>
-              <section
-                className="relative overflow-hidden rounded-[32px] border p-5 sm:p-6"
-                style={{
-                  borderColor: 'rgba(167,139,250,0.16)',
-                  background: 'linear-gradient(180deg, rgba(17,17,25,0.92), rgba(10,10,15,0.96))',
-                  boxShadow: '0 26px 60px rgba(0,0,0,0.34)',
-                }}
-              >
-                <div className="pointer-events-none absolute inset-x-8 top-0 h-20 bg-gradient-to-b from-[#7c3aed12] to-transparent" />
-
-                <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-                  <div>
-                    <div className="text-[11px] uppercase tracking-[0.34em]" style={{ color: '#64748b' }}>
-                      Cast Timeline
-                    </div>
-                    <div className="mt-2 text-2xl font-bold tracking-[-0.05em]" style={{ color: '#f5f3ff' }}>
-                      Every action, in order.
-                    </div>
-                  </div>
-                  <div className="text-sm" style={{ color: '#94a3b8' }}>
-                    {isLoading ? 'Loading archive...' : `${habits.length} entries for today`}
-                  </div>
+            {loadError && (
+              <TetrisFall delay={0.28} className="mt-5">
+                <div className="error-banner" style={{ borderColor: 'rgba(251, 191, 36, 0.18)', background: 'rgba(54, 35, 10, 0.24)', color: '#fde68a' }}>
+                  {loadError}. Demo entries are filling the page so the spellbook still stays usable while the backend
+                  is down.
                 </div>
+              </TetrisFall>
+            )}
 
-                {isLoading ? (
-                  <div className="mt-6 space-y-4">
-                    {[0, 1, 2].map((item) => (
-                      <div
-                        key={item}
-                        className="rounded-[24px] border p-5"
-                        style={{
-                          borderColor: 'rgba(255,255,255,0.05)',
-                          background: 'rgba(255,255,255,0.02)',
-                        }}
-                      >
-                        <div className="h-4 w-32 rounded-full bg-white/8" />
-                        <div className="mt-4 h-10 rounded-2xl bg-white/6" />
+            <div className="mt-12 grid flex-1 gap-8 xl:grid-cols-[minmax(0,1.35fr)_360px]">
+              <TetrisFall delay={0.32}>
+                <div className="cauldron-panel" style={{ padding: '2rem' }}>
+                  <div className="cauldron-panel-glow" />
+
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                    <div>
+                      <div className="text-label">Cast Timeline</div>
+                      <div className="text-title mt-2">Every action, in order.</div>
+                    </div>
+                    <div className="text-sm" style={{ color: '#94a3b8' }}>
+                      {isLoading ? 'Loading archive...' : `${habits.length} entries for today`}
+                    </div>
+                  </div>
+
+                  {isLoading ? (
+                    <div className="mt-8 space-y-4">
+                      {[0, 1, 2].map((item) => (
+                        <div key={item} className="metric-panel" style={{ opacity: 0.5 }}>
+                          <div className="h-4 w-32 rounded-full bg-white/8" />
+                          <div className="mt-4 h-10 rounded-2xl bg-white/6" />
+                        </div>
+                      ))}
+                    </div>
+                  ) : habits.length === 0 ? (
+                    <div className="mt-8 metric-panel flex-center" style={{ padding: '4rem 2rem', textAlign: 'center' }}>
+                      <div>
+                        <div className="text-2xl font-bold tracking-[-0.04em]" style={{ color: '#f5f3ff' }}>
+                          No spells cast yet.
+                        </div>
+                        <div className="mx-auto mt-3 max-w-md text-sm leading-6" style={{ color: '#94a3b8' }}>
+                          Log your first habit from the cauldron and it will appear here with its time, points, and school.
+                        </div>
                       </div>
-                    ))}
-                  </div>
-                ) : habits.length === 0 ? (
-                  <div
-                    className="mt-6 rounded-[28px] border px-6 py-16 text-center"
-                    style={{
-                      borderColor: 'rgba(255,255,255,0.06)',
-                      background: 'rgba(255,255,255,0.015)',
-                    }}
-                  >
-                    <div className="text-2xl font-bold tracking-[-0.04em]" style={{ color: '#f5f3ff' }}>
-                      No spells cast yet.
                     </div>
-                    <div className="mx-auto mt-3 max-w-md text-sm leading-6" style={{ color: '#94a3b8' }}>
-                      Log your first habit from the cauldron and it will appear here with its time, points, and school.
-                    </div>
-                  </div>
-                ) : (
-                  <div className="relative mt-6">
-                    <div
-                      className="absolute bottom-5 left-[18px] top-5 w-px"
-                      style={{ background: 'linear-gradient(180deg, rgba(167,139,250,0.18), rgba(96,165,250,0.06))' }}
-                    />
+                  ) : (
+                    <div className="spellbook-timeline mt-8">
+                      <div className="timeline-line" />
 
-                    <div className="space-y-4">
                       {habits.map((habit, index) => {
                         const color = categoryColors[habit.category] || '#a78bfa';
 
                         return (
                           <motion.article
                             key={habit.id}
-                            className="relative pl-12"
+                            className="relative"
                             initial={{ opacity: 0, y: 18 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true, amount: 0.22 }}
                             transition={{ duration: 0.32, delay: index * 0.04 }}
                           >
-                            <span
-                              className="absolute left-[11px] top-6 h-4 w-4 rounded-full border-2"
-                              style={{
-                                borderColor: color,
-                                background: '#0a0a0f',
-                                boxShadow: `0 0 18px ${color}55`,
-                              }}
-                            />
+                            <div className="timeline-node" style={{ background: color, boxShadow: `0 0 12px ${color}` }} />
 
-                            <div
-                              className="rounded-[28px] border p-5 sm:p-6"
-                              style={{
-                                borderColor: 'rgba(167,139,250,0.12)',
-                                background:
-                                  'linear-gradient(180deg, rgba(19,19,29,0.98), rgba(13,13,21,0.98))',
-                                boxShadow: '0 16px 32px rgba(0,0,0,0.22)',
-                              }}
-                            >
+                            <div className="spellbook-card">
                               <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                                 <div className="flex items-start gap-4">
                                   <div
-                                    className="rounded-2xl border p-3"
+                                    className="glass-pill p-3"
                                     style={{
                                       borderColor: `${color}33`,
                                       background: `${color}14`,
@@ -353,9 +269,9 @@ export function Spellbook() {
                                   </div>
                                 </div>
 
-                                <div className="flex items-center gap-2 self-start sm:justify-end">
+                                <div className="self-start">
                                   <span
-                                    className="rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em]"
+                                    className="glass-pill px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em]"
                                     style={{
                                       color,
                                       borderColor: `${color}3d`,
@@ -371,100 +287,70 @@ export function Spellbook() {
                         );
                       })}
                     </div>
-                  </div>
-                )}
-              </section>
-            </TetrisFall>
+                  )}
+                </div>
+              </TetrisFall>
 
-            <div className="space-y-5">
-              <TetrisFall delay={0.38}>
-                <section
-                  className="rounded-[30px] border p-5"
-                  style={{
-                    borderColor: 'rgba(167,139,250,0.16)',
-                    background: 'linear-gradient(180deg, rgba(16,16,24,0.9), rgba(10,10,15,0.95))',
-                  }}
-                >
-                  <div className="text-[11px] uppercase tracking-[0.34em]" style={{ color: '#64748b' }}>
-                    School Breakdown
-                  </div>
+              <div className="flex flex-col gap-5">
+                <TetrisFall delay={0.38}>
+                  <div className="metric-panel">
+                    <div className="text-label">School Breakdown</div>
 
-                  <div className="mt-5 space-y-4">
-                    {categorySummary.length === 0 ? (
-                      <div
-                        className="rounded-[24px] border px-4 py-8 text-sm leading-6"
-                        style={{
-                          borderColor: 'rgba(255,255,255,0.06)',
-                          background: 'rgba(255,255,255,0.015)',
-                          color: '#94a3b8',
-                        }}
-                      >
-                        Category totals will appear after your first cast.
-                      </div>
-                    ) : (
-                      categorySummary.map((item) => (
-                        <div key={item.category} className="space-y-2">
-                          <div className="flex items-center justify-between gap-3">
-                            <div className="flex items-center gap-3">
-                              <div
-                                className="h-3 w-3 rounded-full"
-                                style={{ background: item.color, boxShadow: `0 0 14px ${item.color}` }}
-                              />
-                              <div className="text-sm font-medium capitalize" style={{ color: '#f5f3ff' }}>
-                                {item.category}
-                              </div>
-                            </div>
-                            <div className="text-sm font-semibold" style={{ color: '#c4b5fd' }}>
-                              {item.points} pts
-                            </div>
-                          </div>
-
-                          <div className="h-2 overflow-hidden rounded-full bg-white/6">
-                            <div
-                              className="h-full rounded-full"
-                              style={{
-                                width: `${Math.max((item.count / Math.max(habits.length, 1)) * 100, 18)}%`,
-                                background: `linear-gradient(90deg, ${item.color}, ${item.color}66)`,
-                              }}
-                            />
-                          </div>
-
-                          <div className="text-xs uppercase tracking-[0.24em]" style={{ color: '#64748b' }}>
-                            {item.count} cast{item.count === 1 ? '' : 's'}
-                          </div>
+                    <div className="category-echoes">
+                      {categorySummary.length === 0 ? (
+                        <div className="activity-card flex-center" style={{ padding: '2rem 1rem', color: '#94a3b8', textAlign: 'center' }}>
+                          Category totals will appear after your first cast.
                         </div>
-                      ))
-                    )}
-                  </div>
-                </section>
-              </TetrisFall>
+                      ) : (
+                        categorySummary.map((item) => (
+                          <div key={item.category} className="echo-item" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '0.5rem' }}>
+                            <div className="flex-between w-full">
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                <div className="status-dot" style={{ background: item.color, boxShadow: `0 0 14px ${item.color}` }} />
+                                <div className="text-sm font-medium capitalize" style={{ color: '#f5f3ff' }}>{item.category}</div>
+                              </div>
+                              <div className="text-sm font-semibold" style={{ color: '#c4b5fd' }}>{item.points} pts</div>
+                            </div>
 
-              <TetrisFall delay={0.44}>
-                <section
-                  className="rounded-[30px] border p-5"
-                  style={{
-                    borderColor: 'rgba(167,139,250,0.16)',
-                    background: 'linear-gradient(180deg, rgba(16,16,24,0.9), rgba(10,10,15,0.95))',
-                  }}
-                >
-                  <div className="text-[11px] uppercase tracking-[0.34em]" style={{ color: '#64748b' }}>
-                    Reading Notes
-                  </div>
-                  <div className="mt-4 space-y-3 text-sm leading-6" style={{ color: '#cbd5e1' }}>
-                    <div className="rounded-[22px] border px-4 py-4" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
-                      The spellbook now loads cleanly with real data first and drops to demo history only if the backend
-                      is unavailable.
-                    </div>
-                    <div className="rounded-[22px] border px-4 py-4" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
-                      Entries are sorted newest first so your latest action is always visible at the top.
-                    </div>
-                    <div className="rounded-[22px] border px-4 py-4" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
-                      Summary tiles and school totals make the page useful even before you scroll through the full
-                      timeline.
+                            <div className="echo-bar-container w-full">
+                              <div
+                                className="echo-bar"
+                                style={{
+                                  width: `${Math.max((item.count / Math.max(habits.length, 1)) * 100, 18)}%`,
+                                  background: `linear-gradient(90deg, ${item.color}, ${item.color}66)`,
+                                }}
+                              />
+                            </div>
+
+                            <div className="text-xs uppercase tracking-[0.24em]" style={{ color: '#64748b' }}>
+                              {item.count} cast{item.count === 1 ? '' : 's'}
+                            </div>
+                          </div>
+                        ))
+                      )}
                     </div>
                   </div>
-                </section>
-              </TetrisFall>
+                </TetrisFall>
+
+                <TetrisFall delay={0.44}>
+                  <div className="metric-panel">
+                    <div className="text-label">Reading Notes</div>
+                    <div className="mt-4 flex flex-col gap-3">
+                      <div className="activity-card text-sm leading-6" style={{ color: '#cbd5e1' }}>
+                        The spellbook now loads cleanly with real data first and drops to demo history only if the backend
+                        is unavailable.
+                      </div>
+                      <div className="activity-card text-sm leading-6" style={{ color: '#cbd5e1' }}>
+                        Entries are sorted newest first so your latest action is always visible at the top.
+                      </div>
+                      <div className="activity-card text-sm leading-6" style={{ color: '#cbd5e1' }}>
+                        Summary tiles and school totals make the page useful even before you scroll through the full
+                        timeline.
+                      </div>
+                    </div>
+                  </div>
+                </TetrisFall>
+              </div>
             </div>
           </div>
         </div>

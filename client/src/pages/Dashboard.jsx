@@ -92,86 +92,72 @@ export function Dashboard() {
 
   return (
     <PageShell>
-      <FogBackground />
+      <div className="container" style={{ paddingTop: '1.25rem' }}>
+        <div className="dashboard-grid">
+          <NavBar />
 
-      <div className="relative lg:grid lg:min-h-[calc(100vh-5rem)] lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-12">
-        <NavBar />
+          <div className="dashboard-main-content dashboard-grid">
+            {/* Status & Stats Section */}
+            <div className="dashboard-stats-section">
+              <div className="flex-between" style={{ marginBottom: '1.5rem' }}>
+                <TetrisFall delay={0.1}>
+                  <div className="glass-pill px-3 py-1.5 text-sm font-semibold" style={{ color: '#a78bfa' }}>
+                    {score.streak}d
+                  </div>
+                </TetrisFall>
 
-        <div className="relative flex min-h-[calc(100vh-6rem)] flex-col pt-2 lg:min-h-0 lg:justify-between lg:pt-0">
-          <div className="flex w-full items-center justify-between">
-            <TetrisFall delay={0.1}>
-              <div
-                className="rounded-full px-3 py-1.5 text-sm font-semibold"
-                style={{
-                  color: '#a78bfa',
-                  background: 'rgba(18,18,26,0.88)',
-                  border: '1px solid rgba(124, 58, 237, 0.25)',
-                  boxShadow: '0 10px 22px rgba(0, 0, 0, 0.26)',
-                }}
-              >
-                {score.streak}d
+                <TetrisFall delay={0.2}>
+                  <div className="glass-pill p-1">
+                    <UserButton afterSignOutUrl="/" />
+                  </div>
+                </TetrisFall>
               </div>
-            </TetrisFall>
 
-            <TetrisFall delay={0.2}>
-              <div
-                className="rounded-full p-1"
-                style={{
-                  background: 'rgba(18,18,26,0.88)',
-                  border: '1px solid rgba(124, 58, 237, 0.25)',
-                  boxShadow: '0 10px 22px rgba(0, 0, 0, 0.26)',
-                }}
-              >
-                <UserButton afterSignOutUrl="/" />
-              </div>
-            </TetrisFall>
-          </div>
-
-          <div className="mt-8 grid flex-1 items-start gap-8 lg:grid-cols-[minmax(0,1.2fr)_390px] xl:grid-cols-[minmax(0,1.25fr)_430px]">
-            <div className="order-2 lg:order-1">
-              <TetrisFall delay={0.26} className="text-left">
-                <div className="rounded-[34px] border p-6 sm:p-8" style={{ borderColor: 'rgba(167,139,250,0.12)', background: 'linear-gradient(180deg, rgba(16,16,24,0.72), rgba(10,10,16,0.78))' }}>
-                  <div className="flex items-end justify-between gap-6">
+              <TetrisFall delay={0.26}>
+                <div className="metric-panel" style={{ background: 'linear-gradient(180deg, rgba(16,16,24,0.72), rgba(10,10,16,0.78))' }}>
+                  <div className="flex-between">
                     <div>
-                    <motion.div
-                      className="h-2 w-2 rounded-full"
-                      style={{ background: '#7c3aed', boxShadow: '0 0 16px rgba(124,58,237,0.85)' }}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: [0.55, 1, 0.55] }}
-                      transition={{ delay: 0.3 }}
-                    />
-                    <motion.div
-                      className="mt-4 text-7xl font-bold tracking-[-0.08em] lg:text-8xl xl:text-[7rem]"
-                      style={{ color: '#a78bfa' }}
-                      key={score.todayScore}
-                      initial={{ scale: 1.4, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      transition={{ type: 'spring', damping: 12 }}
-                    >
-                      {score.todayScore}
-                    </motion.div>
-                    <div className="mt-3 text-[11px] uppercase tracking-[0.36em]" style={{ color: '#64748b' }}>
-                      {loadError ? 'Waiting for live path' : 'Today&apos;s brew'}
-                    </div>
+                      <motion.div
+                        className="badge-dot"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: [0.55, 1, 0.55] }}
+                        transition={{ delay: 0.3 }}
+                      />
+                      <motion.div
+                        className="score-value"
+                        style={{ color: '#a78bfa', marginTop: '1rem' }}
+                        key={score.todayScore}
+                        initial={{ scale: 1.4, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ type: 'spring', damping: 12 }}
+                      >
+                        {score.todayScore}
+                      </motion.div>
+                      <div className="score-label" style={{ marginTop: '0.75rem' }}>
+                        {loadError ? 'Waiting for live path' : 'Today&apos;s brew'}
+                      </div>
                     </div>
 
-                    <div className="hidden rounded-3xl border px-5 py-4 lg:block" style={{ borderColor: 'rgba(124,58,237,0.14)', background: 'rgba(12,12,18,0.55)' }}>
-                      <div className="text-[11px] uppercase tracking-[0.3em]" style={{ color: '#64748b' }}>Active</div>
-                      <div className="mt-2 text-3xl font-bold tracking-[-0.04em]" style={{ color: '#e2e8f0' }}>{loggedCategories.length}</div>
+                    <div className="glass-pill px-5 py-4 hidden lg-block">
+                      <div className="text-label">Active</div>
+                      <div className="text-3xl font-bold tracking-[-0.04em]" style={{ color: '#e2e8f0', marginTop: '0.5rem' }}>
+                        {loggedCategories.length}
+                      </div>
                     </div>
                   </div>
-                  <div className="mt-8 grid gap-4 sm:grid-cols-3">
-                    <div className="rounded-3xl border p-5" style={{ borderColor: 'rgba(124,58,237,0.14)', background: 'rgba(12,12,18,0.55)' }}>
-                      <div className="text-[11px] uppercase tracking-[0.3em]" style={{ color: '#64748b' }}>Path</div>
-                      <div className="mt-3 text-3xl font-bold tracking-[-0.04em]" style={{ color: '#c4b5fd' }}>{score.pathScore}</div>
+
+                  <div className="activity-grid mt-8" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+                    <div className="glass-pill p-4">
+                      <div className="text-label" style={{ fontSize: '10px' }}>Path</div>
+                      <div className="text-2xl font-bold mt-2" style={{ color: '#c4b5fd' }}>{score.pathScore}</div>
                     </div>
-                    <div className="rounded-3xl border p-5" style={{ borderColor: 'rgba(124,58,237,0.14)', background: 'rgba(12,12,18,0.55)' }}>
-                      <div className="text-[11px] uppercase tracking-[0.3em]" style={{ color: '#64748b' }}>Logged</div>
-                      <div className="mt-3 text-3xl font-bold tracking-[-0.04em]" style={{ color: '#e2e8f0' }}>{loggedCategories.length}</div>
+                    <div className="glass-pill p-4">
+                      <div className="text-label" style={{ fontSize: '10px' }}>Logged</div>
+                      <div className="text-2xl font-bold mt-2" style={{ color: '#e2e8f0' }}>{loggedCategories.length}</div>
                     </div>
-                    <div className="rounded-3xl border p-5" style={{ borderColor: 'rgba(124,58,237,0.14)', background: 'rgba(12,12,18,0.55)' }}>
-                      <div className="text-[11px] uppercase tracking-[0.3em]" style={{ color: '#64748b' }}>Streak</div>
-                      <div className="mt-3 text-3xl font-bold tracking-[-0.04em]" style={{ color: '#e2e8f0' }}>{score.streak}</div>
+                    <div className="glass-pill p-4">
+                      <div className="text-label" style={{ fontSize: '10px' }}>Streak</div>
+                      <div className="text-2xl font-bold mt-2" style={{ color: '#e2e8f0' }}>{score.streak}</div>
                     </div>
                   </div>
                 </div>
@@ -179,29 +165,16 @@ export function Dashboard() {
 
               {loadError && (
                 <TetrisFall delay={0.38} className="mt-5">
-                  <div
-                    className="rounded-3xl border px-5 py-4 text-sm"
-                    style={{
-                      borderColor: 'rgba(248,113,113,0.16)',
-                      background: 'rgba(48, 18, 24, 0.34)',
-                      color: '#fda4af',
-                    }}
-                  >
+                  <div className="error-banner">
                     {loadError}. Sign in again or check the backend connection.
                   </div>
                 </TetrisFall>
               )}
 
-              <TetrisFall delay={0.46} className="mt-8">
+              <TetrisFall delay={0.46} className="mt-8 flex-center">
                 <motion.button
                   id="log-habit-btn"
-                  className="cursor-pointer rounded-full border-2 px-14 py-4 text-lg font-bold tracking-[0.28em]"
-                  style={{
-                    background: 'linear-gradient(180deg, #8b5cf6 0%, #6d28d9 100%)',
-                    borderColor: '#c4b5fd',
-                    color: '#f8fafc',
-                    boxShadow: '0 22px 46px rgba(124, 58, 237, 0.34)',
-                  }}
+                  className="btn-primary px-14 py-4"
                   whileHover={{ scale: 1.06, boxShadow: '0 0 50px rgba(124, 58, 237, 0.6)' }}
                   whileTap={{ scale: 0.94 }}
                   onClick={() => setShowPanel(true)}
@@ -212,31 +185,27 @@ export function Dashboard() {
               </TetrisFall>
 
               <TetrisFall delay={0.4} className="mt-8">
-                <div className="rounded-[28px] border p-5" style={{ borderColor: 'rgba(124,58,237,0.14)', background: 'linear-gradient(180deg, rgba(13,13,20,0.64), rgba(9,9,14,0.68))' }}>
-                  <div className="flex items-center justify-between">
-                    <div className="text-[11px] uppercase tracking-[0.32em]" style={{ color: '#64748b' }}>Recent casts</div>
-                    <div className="text-[11px] uppercase tracking-[0.3em]" style={{ color: '#64748b' }}>{todayHabits.length}</div>
+                <div className="metric-panel">
+                  <div className="flex-between">
+                    <div className="text-label" style={{ letterSpacing: '0.32em' }}>Recent casts</div>
+                    <div className="text-label" style={{ letterSpacing: '0.3em' }}>{todayHabits.length}</div>
                   </div>
-                  <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                  <div className="activity-grid">
                     {recentHabits.length === 0 ? (
-                      <div className="rounded-2xl border px-4 py-6 text-sm" style={{ borderColor: 'rgba(255,255,255,0.05)', color: '#64748b' }}>
+                      <div className="activity-card flex-center" style={{ padding: '1.5rem 1rem', color: '#64748b', textAlign: 'center' }}>
                         {loadError ? 'No live activity yet' : 'Nothing logged yet'}
                       </div>
                     ) : (
                       recentHabits.map((habit) => (
-                        <div
-                          key={habit.id}
-                          className="rounded-2xl border px-4 py-4"
-                          style={{
-                            borderColor: 'rgba(255,255,255,0.05)',
-                            background: 'rgba(255,255,255,0.015)',
-                          }}
-                        >
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-3">
+                        <div key={habit.id} className="activity-card">
+                          <div className="flex-between">
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                               <div
-                                className="h-2.5 w-2.5 rounded-full"
-                                style={{ background: categoryColors[habit.category] || '#a78bfa', boxShadow: `0 0 14px ${categoryColors[habit.category] || '#a78bfa'}` }}
+                                className="status-dot"
+                                style={{ 
+                                  background: categoryColors[habit.category] || '#a78bfa', 
+                                  boxShadow: `0 0 14px ${categoryColors[habit.category] || '#a78bfa'}` 
+                                }}
                               />
                               <div className="text-sm font-medium capitalize" style={{ color: '#e2e8f0' }}>{habit.category}</div>
                             </div>
@@ -252,24 +221,21 @@ export function Dashboard() {
 
             <div className="order-1 lg:order-2">
               <TetrisFall delay={0.3} className="relative z-10">
-                <div
-                  className="relative overflow-hidden rounded-[34px] border p-6 lg:p-7"
-                  style={{
-                    borderColor: 'rgba(167,139,250,0.16)',
-                    background: 'linear-gradient(180deg, rgba(17,17,25,0.88), rgba(10,10,16,0.92))',
-                    boxShadow: '0 30px 70px rgba(0,0,0,0.38)',
-                  }}
-                >
-                  <div className="pointer-events-none absolute inset-x-8 top-0 h-20 bg-gradient-to-b from-[#7c3aed15] to-transparent" />
-                  <div className="text-[11px] uppercase tracking-[0.34em]" style={{ color: '#64748b' }}>Cauldron View</div>
+                <div className="cauldron-panel">
+                  <div className="cauldron-panel-glow" />
+                  <div className="text-label">Cauldron View</div>
                   <div className="mt-2 text-sm leading-6" style={{ color: '#cbd5e1' }}>
                     A cleaner desktop stage for your daily score, active categories, and the next habit you want to cast.
                   </div>
 
-                  <div className="relative mx-auto mt-6 flex min-h-[360px] items-center justify-center lg:min-h-[520px]">
+                  <div className="cauldron-stage">
                     <div
-                      className="absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl lg:h-[26rem] lg:w-[26rem] xl:h-[30rem] xl:w-[30rem]"
-                      style={{ background: 'radial-gradient(circle, rgba(124,58,237,0.18), transparent 70%)' }}
+                      className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
+                      style={{ 
+                        background: 'radial-gradient(circle, rgba(124,58,237,0.18), transparent 70%)',
+                        width: 'min(80vw, 30rem)',
+                        height: 'min(80vw, 30rem)'
+                      }}
                     />
                     <Cauldron score={score.todayScore} />
                     {loggedCategories.map((cat, i) => (
@@ -280,21 +246,21 @@ export function Dashboard() {
               </TetrisFall>
 
               <TetrisFall delay={0.5} className="mt-5">
-                <div className="rounded-[30px] border p-5" style={{ borderColor: 'rgba(124,58,237,0.14)', background: 'linear-gradient(180deg, rgba(13,13,20,0.64), rgba(9,9,14,0.68))' }}>
-                  <div className="text-[11px] uppercase tracking-[0.32em]" style={{ color: '#64748b' }}>Category echoes</div>
-                  <div className="mt-4 space-y-3">
+                <div className="metric-panel">
+                  <div className="text-label" style={{ letterSpacing: '0.32em' }}>Category echoes</div>
+                  <div className="category-echoes">
                     {categorySummary.length === 0 ? (
-                      <div className="rounded-2xl border px-4 py-6 text-sm" style={{ borderColor: 'rgba(255,255,255,0.05)', color: '#64748b' }}>
+                      <div className="activity-card flex-center" style={{ padding: '1.5rem 1rem', color: '#64748b', textAlign: 'center' }}>
                         {loadError ? 'Connect live data to see category activity.' : 'Categories appear here after the first log.'}
                       </div>
                     ) : (
                       categorySummary.map((item) => (
-                        <div key={item.category} className="flex items-center gap-4">
-                          <div className="h-2.5 w-2.5 rounded-full" style={{ background: item.color, boxShadow: `0 0 14px ${item.color}` }} />
+                        <div key={item.category} className="echo-item">
+                          <div className="status-dot" style={{ background: item.color, boxShadow: `0 0 14px ${item.color}` }} />
                           <div className="min-w-[84px] text-sm capitalize" style={{ color: '#e2e8f0' }}>{item.category}</div>
-                          <div className="h-2 flex-1 overflow-hidden rounded-full bg-white/5">
+                          <div className="echo-bar-container">
                             <div
-                              className="h-full rounded-full"
+                              className="echo-bar"
                               style={{
                                 width: `${Math.max((item.count / Math.max(todayHabits.length, 1)) * 100, 14)}%`,
                                 background: `linear-gradient(90deg, ${item.color}, ${item.color}66)`,

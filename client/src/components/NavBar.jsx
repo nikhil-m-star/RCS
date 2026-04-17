@@ -51,13 +51,7 @@ export function NavBar() {
   return (
     <>
       <motion.nav
-        className="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 gap-2 rounded-full p-2 lg:hidden"
-        style={{
-          background: 'rgba(13, 13, 20, 0.8)',
-          backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(167, 139, 250, 0.18)',
-          boxShadow: '0 18px 42px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255,255,255,0.04)',
-        }}
+        className="nav-mobile"
         initial={{ y: '120vh' }}
         animate={{ y: 0 }}
         transition={{ type: 'spring', damping: 15, stiffness: 80, delay: 0.6 }}
@@ -69,20 +63,15 @@ export function NavBar() {
             <motion.button
               key={item.path}
               id={item.id}
-              className="relative cursor-pointer rounded-full border-none p-3 outline-none"
-              style={{
-                color: isActive ? '#a78bfa' : '#64748b',
-                background: isActive ? 'linear-gradient(180deg, rgba(124, 58, 237, 0.18), rgba(124, 58, 237, 0.08))' : 'transparent',
-              }}
-              whileHover={{ scale: 1.15, color: '#a78bfa' }}
+              className={`nav-item-mobile ${isActive ? 'active' : ''}`.trim()}
+              whileHover={{ scale: 1.15 }}
               whileTap={{ scale: 0.9 }}
               onClick={() => navigate(item.path)}
             >
               <Icon />
               {isActive && (
                 <motion.div
-                  className="absolute inset-0 rounded-full"
-                  style={{ boxShadow: '0 0 15px rgba(124, 58, 237, 0.3)' }}
+                  className="nav-active-glow"
                   animate={{ opacity: [0.5, 1, 0.5] }}
                   transition={{ duration: 2, repeat: Infinity }}
                 />
@@ -93,22 +82,22 @@ export function NavBar() {
       </motion.nav>
 
       <motion.aside
-        className="hidden lg:flex lg:h-full lg:w-[220px] lg:flex-col lg:justify-between lg:pr-6"
+        className="nav-desktop"
         initial={{ x: -80, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ type: 'spring', damping: 18, stiffness: 90, delay: 0.1 }}
       >
         <div>
-          <div className="mb-10 pt-3">
-            <div className="text-3xl font-bold tracking-[-0.06em]" style={{ color: '#f8fafc' }}>
-              Foot<span style={{ color: '#a78bfa' }}>prints</span>
+          <div className="nav-logo-section">
+            <div className="nav-logo-text">
+              Foot<span className="nav-logo-accent">prints</span>
             </div>
-            <div className="mt-2 text-[11px] uppercase tracking-[0.36em]" style={{ color: '#64748b' }}>
+            <div className="text-label mt-2">
               Coven Console
             </div>
           </div>
 
-          <div className="space-y-2">
+          <div className="nav-item-list">
             {navItems.map((item) => {
               const isActive = location.pathname === item.path;
               const Icon = item.icon;
@@ -116,20 +105,12 @@ export function NavBar() {
                 <motion.button
                   key={item.path}
                   id={item.id}
-                  className="flex w-full cursor-pointer items-center gap-3 rounded-2xl border px-4 py-3 text-left outline-none"
-                  style={{
-                    color: isActive ? '#e2e8f0' : '#94a3b8',
-                    borderColor: isActive ? 'rgba(167,139,250,0.24)' : 'rgba(255,255,255,0.04)',
-                    background: isActive
-                      ? 'linear-gradient(180deg, rgba(124,58,237,0.24), rgba(124,58,237,0.08))'
-                      : 'rgba(255,255,255,0.01)',
-                    boxShadow: isActive ? '0 18px 36px rgba(124,58,237,0.12)' : 'none',
-                  }}
-                  whileHover={{ scale: 1.01, color: '#e2e8f0' }}
+                  className={`nav-item-desktop ${isActive ? 'active' : ''}`.trim()}
+                  whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => navigate(item.path)}
                 >
-                  <span style={{ color: isActive ? '#c4b5fd' : '#64748b' }}>
+                  <span className={`nav-icon-container ${isActive ? 'active' : ''}`.trim()}>
                     <Icon />
                   </span>
                   <span className="text-sm font-medium tracking-[0.08em]">{item.label}</span>
@@ -139,15 +120,9 @@ export function NavBar() {
           </div>
         </div>
 
-        <div
-          className="rounded-3xl border p-4"
-          style={{
-            borderColor: 'rgba(167,139,250,0.14)',
-            background: 'linear-gradient(180deg, rgba(18,18,26,0.65), rgba(10,10,15,0.72))',
-          }}
-        >
-          <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.34em]" style={{ color: '#64748b' }}>
-            <span className="h-2 w-2 rounded-full bg-[#a78bfa] shadow-[0_0_12px_rgba(167,139,250,0.9)]" />
+        <div className="nav-footer-card">
+          <div className="nav-footer-status text-label">
+            <span className="status-dot" />
             Desktop Flow
           </div>
           <div className="mt-3 text-sm leading-6" style={{ color: '#cbd5e1' }}>

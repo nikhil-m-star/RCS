@@ -8,22 +8,17 @@ export function Cauldron({ score = 0 }) {
   const liquidY = 195 - liquidHeight;
 
   return (
-    <div className="relative mx-auto h-72 w-72 max-w-full lg:h-[30rem] lg:w-[30rem] xl:h-[34rem] xl:w-[34rem]">
+    <div className="cauldron-root">
       {/* Glow behind cauldron */}
       <div
-        className="absolute inset-0 rounded-full blur-3xl opacity-30"
+        className="cauldron-bg-glow"
         style={{
           background: `radial-gradient(circle, rgba(124,58,237,${0.1 + fillPercent * 0.004}) 0%, transparent 70%)`,
         }}
       />
-      <div
-        className="absolute left-1/2 top-1/2 h-48 w-48 -translate-x-1/2 -translate-y-1/2 rounded-full blur-2xl"
-        style={{
-          background: 'radial-gradient(circle, rgba(167,139,250,0.16), transparent 68%)',
-        }}
-      />
+      <div className="cauldron-center-glow" />
 
-      <svg viewBox="0 0 240 240" className="w-full h-full relative z-10">
+      <svg viewBox="0 0 240 240" className="cauldron-svg">
         <defs>
           <linearGradient id="liquidGrad" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#a78bfa" stopOpacity="0.8" />
