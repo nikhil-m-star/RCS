@@ -11,23 +11,20 @@ import { PageShell } from '../components/PageShell';
 import { setAuthToken, syncUser, getScore, getTodayHabits } from '../lib/api';
 import { categoryColors } from '../lib/categories.js';
 
-// Demo fallback data when API is not available
-const DEMO_SCORE = { todayScore: 45, pathScore: 320, streak: 5 };
-const DEMO_HABITS = [
-  { id: '1', category: 'transport', label: 'transport', points: 15, loggedAt: new Date().toISOString() },
-  { id: '2', category: 'water', label: 'water', points: 10, loggedAt: new Date().toISOString() },
-  { id: '3', category: 'energy', label: 'energy', points: 20, loggedAt: new Date().toISOString() },
-];
+const EMPTY_SCORE = { todayScore: 0, pathScore: 0, streak: 0 };
 
 export function Dashboard() {
   const { getToken, userId } = useAuth();
   const { user } = useUser();
-  const [score, setScore] = useState({ todayScore: 0, pathScore: 0, streak: 0 });
+  const [score, setScore] = useState(EMPTY_SCORE);
   const [todayHabits, setTodayHabits] = useState([]);
   const [showPanel, setShowPanel] = useState(false);
+  const [isReady, setIsReady] = useState(false);
+  const [loadError, setLoadError] = useState('');
 
   const loadData = async () => {
     try {
+      setLoadError('');
       const token = await getToken();
       setAuthToken(token);
       await syncUser(user?.username || user?.firstName || 'wanderer');
@@ -37,10 +34,13 @@ export function Dashboard() {
       ]);
       setScore(scoreRes.data);
       setTodayHabits(habitsRes.data);
+      setIsReady(true);
     } catch {
-      console.warn('[Footprints] API unavailable, using demo data');
-      setScore(DEMO_SCORE);
-      setTodayHabits(DEMO_HABITS);
+      console.warn('[Footprints] API unavailable, showing empty state');
+      setScore(EMPTY_SCORE);
+      setTodayHabits([]);
+      setLoadError('Live data unavailable');
+      setIsReady(true);
     }
   };
 
@@ -58,10 +58,14 @@ export function Dashboard() {
             ]);
             setScore(scoreRes.data);
             setTodayHabits(habitsRes.data);
+            setLoadError('');
+            setIsReady(true);
           } catch {
-            console.warn('[Footprints] API unavailable, using demo data');
-            setScore(DEMO_SCORE);
-            setTodayHabits(DEMO_HABITS);
+            console.warn('[Footprints] API unavailable, showing empty state');
+            setScore(EMPTY_SCORE);
+            setTodayHabits([]);
+            setLoadError('Live data unavailable');
+            setIsReady(true);
           }
         })();
       }, 0);
@@ -142,7 +146,7 @@ export function Dashboard() {
                       {score.todayScore}
                     </motion.div>
                     <div className="mt-3 text-[11px] uppercase tracking-[0.36em]" style={{ color: '#64748b' }}>
-                      Today&apos;s brew
+                      {loadError ? 'Waiting for live path' : 'Today&apos;s brew'}
                     </div>
                   </div>
 
@@ -170,6 +174,21 @@ export function Dashboard() {
                 </div>
               </TetrisFall>
 
+              {loadError && (
+                <TetrisFall delay={0.38} className="mt-5">
+                  <div
+                    className="rounded-3xl border px-5 py-4 text-sm"
+                    style={{
+                      borderColor: 'rgba(248,113,113,0.16)',
+                      background: 'rgba(48, 18, 24, 0.34)',
+                      color: '#fda4af',
+                    }}
+                  >
+                    {loadError}. Sign in again or start the server to load your real score.
+                  </div>
+                </TetrisFall>
+              )}
+
               <TetrisFall delay={0.46} className="mt-8">
                 <motion.button
                   id="log-habit-btn"
@@ -183,6 +202,7 @@ export function Dashboard() {
                   whileHover={{ scale: 1.06, boxShadow: '0 0 50px rgba(124, 58, 237, 0.6)' }}
                   whileTap={{ scale: 0.94 }}
                   onClick={() => setShowPanel(true)}
+                  disabled={!isReady}
                 >
                   LOG
                 </motion.button>
@@ -197,7 +217,7 @@ export function Dashboard() {
                   <div className="mt-4 grid gap-3 sm:grid-cols-2">
                     {recentHabits.length === 0 ? (
                       <div className="rounded-2xl border px-4 py-6 text-sm" style={{ borderColor: 'rgba(255,255,255,0.05)', color: '#64748b' }}>
-                        Nothing logged yet
+                        {loadError ? 'No live activity yet' : 'Nothing logged yet'}
                       </div>
                     ) : (
                       recentHabits.map((habit) => (
@@ -262,7 +282,7 @@ export function Dashboard() {
                   <div className="mt-4 space-y-3">
                     {categorySummary.length === 0 ? (
                       <div className="rounded-2xl border px-4 py-6 text-sm" style={{ borderColor: 'rgba(255,255,255,0.05)', color: '#64748b' }}>
-                        Categories appear here after the first log.
+                        {loadError ? 'Connect live data to see category activity.' : 'Categories appear here after the first log.'}
                       </div>
                     ) : (
                       categorySummary.map((item) => (
