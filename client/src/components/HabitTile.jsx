@@ -11,7 +11,7 @@ export function HabitTile({ category, onLog, delay = 0, isLogged = false }) {
   const tileRef = useRef(null);
 
   const handleClick = async () => {
-    if (isLogged || isLaunching) {
+    if (isLaunching) {
       return;
     }
 
