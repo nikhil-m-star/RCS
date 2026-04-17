@@ -5,7 +5,7 @@ import { NavBar } from '../components/NavBar';
 import { TetrisFall } from '../components/TetrisFall';
 import { FogBackground } from '../components/FogBackground';
 import { PageShell } from '../components/PageShell';
-import { getLeaderboard, setAuthToken, syncUser } from '../lib/api';
+import { getApiErrorMessage, getLeaderboard, setAuthToken, syncUser } from '../lib/api';
 
 // Demo fallback
 const DEMO_LEADERS = [
@@ -23,18 +23,21 @@ export function Leaderboard() {
   const { getToken, userId } = useAuth();
   const { user } = useUser();
   const [leaders, setLeaders] = useState([]);
+  const [loadError, setLoadError] = useState('');
 
   useEffect(() => {
     const load = async () => {
       try {
+        setLoadError('');
         const token = await getToken();
         setAuthToken(token);
         await syncUser(user?.username || user?.firstName || 'wanderer');
         const res = await getLeaderboard();
         setLeaders(res.data);
-      } catch {
-        console.warn('[Footprints] API unavailable, using demo data');
+      } catch (error) {
+        console.warn('[Footprints] API unavailable, using demo data', error);
         setLeaders(DEMO_LEADERS);
+        setLoadError(getApiErrorMessage(error, 'Live leaderboard unavailable'));
       }
     };
     void load();
@@ -58,6 +61,21 @@ export function Leaderboard() {
               Coven
             </h1>
           </TetrisFall>
+
+          {loadError && (
+            <TetrisFall delay={0.16} className="mb-5">
+              <div
+                className="rounded-[24px] border px-5 py-4 text-sm"
+                style={{
+                  borderColor: 'rgba(251, 191, 36, 0.18)',
+                  background: 'rgba(54, 35, 10, 0.24)',
+                  color: '#fde68a',
+                }}
+              >
+                {loadError}
+              </div>
+            </TetrisFall>
+          )}
 
           <div className="space-y-3">
             {leaders.map((leader, i) => {

@@ -100,11 +100,11 @@ export function NavBar() {
       >
         <div>
           <div className="mb-10 pt-3">
-            <div className="text-3xl font-bold tracking-[-0.06em]" style={{ color: '#e2e8f0' }}>
+            <div className="text-3xl font-bold tracking-[-0.06em]" style={{ color: '#f8fafc' }}>
               Foot<span style={{ color: '#a78bfa' }}>prints</span>
             </div>
             <div className="mt-2 text-[11px] uppercase tracking-[0.36em]" style={{ color: '#64748b' }}>
-              Path Tracker
+              Coven Console
             </div>
           </div>
 
@@ -146,11 +146,12 @@ export function NavBar() {
             background: 'linear-gradient(180deg, rgba(18,18,26,0.65), rgba(10,10,15,0.72))',
           }}
         >
-          <div className="text-[11px] uppercase tracking-[0.34em]" style={{ color: '#64748b' }}>
-            Desktop Mode
+          <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.34em]" style={{ color: '#64748b' }}>
+            <span className="h-2 w-2 rounded-full bg-[#a78bfa] shadow-[0_0_12px_rgba(167,139,250,0.9)]" />
+            Desktop Flow
           </div>
           <div className="mt-3 text-sm leading-6" style={{ color: '#cbd5e1' }}>
-            Wider canvas, persistent navigation, and full-page views.
+            Persistent navigation, larger data panels, and faster page scanning.
           </div>
         </div>
       </motion.aside>

@@ -15,14 +15,17 @@ const EMPTY_SCORE = { todayScore: 0, pathScore: 0, streak: 0 };
 
 export function Dashboard() {
   const { getToken, userId } = useAuth();
-  const { user } = useUser();
+  const { user, isLoaded: isUserLoaded } = useUser();
   const [score, setScore] = useState(EMPTY_SCORE);
   const [todayHabits, setTodayHabits] = useState([]);
   const [showPanel, setShowPanel] = useState(false);
-  const [isReady, setIsReady] = useState(false);
   const [loadError, setLoadError] = useState('');
 
   const loadData = async () => {
+    if (!userId) {
+      return;
+    }
+
     try {
       setLoadError('');
       const token = await getToken();
@@ -34,21 +37,24 @@ export function Dashboard() {
       ]);
       setScore(scoreRes.data);
       setTodayHabits(habitsRes.data);
-      setIsReady(true);
     } catch (error) {
       console.warn('[Footprints] API unavailable, showing empty state', error);
       setScore(EMPTY_SCORE);
       setTodayHabits([]);
       setLoadError(getApiErrorMessage(error, 'Live data unavailable'));
-      setIsReady(true);
     }
   };
 
   useEffect(() => {
+    if (!isUserLoaded) {
+      return undefined;
+    }
+
     if (userId) {
       const timerId = window.setTimeout(() => {
         void (async () => {
           try {
+            setLoadError('');
             const token = await getToken();
             setAuthToken(token);
             await syncUser(user?.username || user?.firstName || 'wanderer');
@@ -58,14 +64,11 @@ export function Dashboard() {
             ]);
             setScore(scoreRes.data);
             setTodayHabits(habitsRes.data);
-            setLoadError('');
-            setIsReady(true);
           } catch (error) {
             console.warn('[Footprints] API unavailable, showing empty state', error);
             setScore(EMPTY_SCORE);
             setTodayHabits([]);
             setLoadError(getApiErrorMessage(error, 'Live data unavailable'));
-            setIsReady(true);
           }
         })();
       }, 0);
@@ -76,7 +79,7 @@ export function Dashboard() {
     }
 
     return undefined;
-  }, [getToken, user?.firstName, user?.username, userId]);
+  }, [getToken, isUserLoaded, user?.firstName, user?.username, userId]);
 
   const loggedCategories = [...new Set(todayHabits.map((h) => h.category))];
   const recentHabits = todayHabits.slice(0, 4);
@@ -90,7 +93,7 @@ export function Dashboard() {
     <PageShell>
       <FogBackground />
 
-      <div className="relative lg:grid lg:min-h-[calc(100vh-5rem)] lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-10">
+      <div className="relative lg:grid lg:min-h-[calc(100vh-5rem)] lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-12">
         <NavBar />
 
         <div className="relative flex min-h-[calc(100vh-6rem)] flex-col pt-2 lg:min-h-0 lg:justify-between lg:pt-0">
@@ -123,11 +126,12 @@ export function Dashboard() {
             </TetrisFall>
           </div>
 
-          <div className="mt-6 grid flex-1 items-center gap-10 lg:grid-cols-[minmax(0,1.1fr)_380px] lg:gap-10 xl:grid-cols-[minmax(0,1.18fr)_420px]">
+          <div className="mt-8 grid flex-1 items-start gap-8 lg:grid-cols-[minmax(0,1.2fr)_390px] xl:grid-cols-[minmax(0,1.25fr)_430px]">
             <div className="order-2 lg:order-1">
               <TetrisFall delay={0.26} className="text-left">
-                <div className="flex items-end justify-between gap-6">
-                  <div>
+                <div className="rounded-[34px] border p-6 sm:p-8" style={{ borderColor: 'rgba(167,139,250,0.12)', background: 'linear-gradient(180deg, rgba(16,16,24,0.72), rgba(10,10,16,0.78))' }}>
+                  <div className="flex items-end justify-between gap-6">
+                    <div>
                     <motion.div
                       className="h-2 w-2 rounded-full"
                       style={{ background: '#7c3aed', boxShadow: '0 0 16px rgba(124,58,237,0.85)' }}
@@ -148,28 +152,26 @@ export function Dashboard() {
                     <div className="mt-3 text-[11px] uppercase tracking-[0.36em]" style={{ color: '#64748b' }}>
                       {loadError ? 'Waiting for live path' : 'Today&apos;s brew'}
                     </div>
-                  </div>
+                    </div>
 
-                  <div className="hidden rounded-3xl border px-5 py-4 lg:block" style={{ borderColor: 'rgba(124,58,237,0.14)', background: 'rgba(12,12,18,0.55)' }}>
-                    <div className="text-[11px] uppercase tracking-[0.3em]" style={{ color: '#64748b' }}>Active</div>
-                    <div className="mt-2 text-3xl font-bold tracking-[-0.04em]" style={{ color: '#e2e8f0' }}>{loggedCategories.length}</div>
+                    <div className="hidden rounded-3xl border px-5 py-4 lg:block" style={{ borderColor: 'rgba(124,58,237,0.14)', background: 'rgba(12,12,18,0.55)' }}>
+                      <div className="text-[11px] uppercase tracking-[0.3em]" style={{ color: '#64748b' }}>Active</div>
+                      <div className="mt-2 text-3xl font-bold tracking-[-0.04em]" style={{ color: '#e2e8f0' }}>{loggedCategories.length}</div>
+                    </div>
                   </div>
-                </div>
-              </TetrisFall>
-
-              <TetrisFall delay={0.34} className="mt-6">
-                <div className="grid gap-4 sm:grid-cols-3">
-                  <div className="rounded-3xl border p-5" style={{ borderColor: 'rgba(124,58,237,0.14)', background: 'rgba(12,12,18,0.55)' }}>
-                    <div className="text-[11px] uppercase tracking-[0.3em]" style={{ color: '#64748b' }}>Path</div>
-                    <div className="mt-3 text-3xl font-bold tracking-[-0.04em]" style={{ color: '#c4b5fd' }}>{score.pathScore}</div>
-                  </div>
-                  <div className="rounded-3xl border p-5" style={{ borderColor: 'rgba(124,58,237,0.14)', background: 'rgba(12,12,18,0.55)' }}>
-                    <div className="text-[11px] uppercase tracking-[0.3em]" style={{ color: '#64748b' }}>Logged</div>
-                    <div className="mt-3 text-3xl font-bold tracking-[-0.04em]" style={{ color: '#e2e8f0' }}>{loggedCategories.length}</div>
-                  </div>
-                  <div className="rounded-3xl border p-5" style={{ borderColor: 'rgba(124,58,237,0.14)', background: 'rgba(12,12,18,0.55)' }}>
-                    <div className="text-[11px] uppercase tracking-[0.3em]" style={{ color: '#64748b' }}>Streak</div>
-                    <div className="mt-3 text-3xl font-bold tracking-[-0.04em]" style={{ color: '#e2e8f0' }}>{score.streak}</div>
+                  <div className="mt-8 grid gap-4 sm:grid-cols-3">
+                    <div className="rounded-3xl border p-5" style={{ borderColor: 'rgba(124,58,237,0.14)', background: 'rgba(12,12,18,0.55)' }}>
+                      <div className="text-[11px] uppercase tracking-[0.3em]" style={{ color: '#64748b' }}>Path</div>
+                      <div className="mt-3 text-3xl font-bold tracking-[-0.04em]" style={{ color: '#c4b5fd' }}>{score.pathScore}</div>
+                    </div>
+                    <div className="rounded-3xl border p-5" style={{ borderColor: 'rgba(124,58,237,0.14)', background: 'rgba(12,12,18,0.55)' }}>
+                      <div className="text-[11px] uppercase tracking-[0.3em]" style={{ color: '#64748b' }}>Logged</div>
+                      <div className="mt-3 text-3xl font-bold tracking-[-0.04em]" style={{ color: '#e2e8f0' }}>{loggedCategories.length}</div>
+                    </div>
+                    <div className="rounded-3xl border p-5" style={{ borderColor: 'rgba(124,58,237,0.14)', background: 'rgba(12,12,18,0.55)' }}>
+                      <div className="text-[11px] uppercase tracking-[0.3em]" style={{ color: '#64748b' }}>Streak</div>
+                      <div className="mt-3 text-3xl font-bold tracking-[-0.04em]" style={{ color: '#e2e8f0' }}>{score.streak}</div>
+                    </div>
                   </div>
                 </div>
               </TetrisFall>
@@ -202,7 +204,7 @@ export function Dashboard() {
                   whileHover={{ scale: 1.06, boxShadow: '0 0 50px rgba(124, 58, 237, 0.6)' }}
                   whileTap={{ scale: 0.94 }}
                   onClick={() => setShowPanel(true)}
-                  disabled={!isReady}
+                  disabled={!isUserLoaded}
                 >
                   LOG
                 </motion.button>
@@ -250,7 +252,7 @@ export function Dashboard() {
             <div className="order-1 lg:order-2">
               <TetrisFall delay={0.3} className="relative z-10">
                 <div
-                  className="relative overflow-hidden rounded-[32px] border p-6 lg:p-7"
+                  className="relative overflow-hidden rounded-[34px] border p-6 lg:p-7"
                   style={{
                     borderColor: 'rgba(167,139,250,0.16)',
                     background: 'linear-gradient(180deg, rgba(17,17,25,0.88), rgba(10,10,16,0.92))',
@@ -260,7 +262,7 @@ export function Dashboard() {
                   <div className="pointer-events-none absolute inset-x-8 top-0 h-20 bg-gradient-to-b from-[#7c3aed15] to-transparent" />
                   <div className="text-[11px] uppercase tracking-[0.34em]" style={{ color: '#64748b' }}>Cauldron View</div>
                   <div className="mt-2 text-sm leading-6" style={{ color: '#cbd5e1' }}>
-                    Your daily cast, category echoes, and the pace of today&apos;s path.
+                    A cleaner desktop stage for your daily score, active categories, and the next habit you want to cast.
                   </div>
 
                   <div className="relative mx-auto mt-6 flex min-h-[360px] items-center justify-center lg:min-h-[520px]">
@@ -277,7 +279,7 @@ export function Dashboard() {
               </TetrisFall>
 
               <TetrisFall delay={0.5} className="mt-5">
-                <div className="rounded-[28px] border p-5" style={{ borderColor: 'rgba(124,58,237,0.14)', background: 'linear-gradient(180deg, rgba(13,13,20,0.64), rgba(9,9,14,0.68))' }}>
+                <div className="rounded-[30px] border p-5" style={{ borderColor: 'rgba(124,58,237,0.14)', background: 'linear-gradient(180deg, rgba(13,13,20,0.64), rgba(9,9,14,0.68))' }}>
                   <div className="text-[11px] uppercase tracking-[0.32em]" style={{ color: '#64748b' }}>Category echoes</div>
                   <div className="mt-4 space-y-3">
                     {categorySummary.length === 0 ? (

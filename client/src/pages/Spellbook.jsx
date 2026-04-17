@@ -7,7 +7,7 @@ import { NavBar } from '../components/NavBar';
 import { PageShell } from '../components/PageShell';
 import { TetrisFall } from '../components/TetrisFall';
 import { categoryColors } from '../lib/categories.js';
-import { api, setAuthToken, syncUser } from '../lib/api';
+import { api, getApiErrorMessage, setAuthToken, syncUser } from '../lib/api';
 
 const DEMO_HABITS = [
   { id: '1', category: 'transport', points: 15, loggedAt: new Date(Date.now() - 30 * 60 * 1000).toISOString() },
@@ -71,15 +71,15 @@ export function Spellbook() {
             (a, b) => new Date(b.loggedAt).getTime() - new Date(a.loggedAt).getTime(),
           ),
         );
-      } catch {
+      } catch (error) {
         if (!isActive) {
           return;
         }
 
-        console.warn('[Footprints] Spellbook API unavailable, using demo data');
+        console.warn('[Footprints] Spellbook API unavailable, using demo data', error);
         setAuthToken(null);
         setHabits(DEMO_HABITS);
-        setLoadError('Live spell history unavailable');
+        setLoadError(getApiErrorMessage(error, 'Live spell history unavailable'));
       } finally {
         if (isActive) {
           setIsLoading(false);
