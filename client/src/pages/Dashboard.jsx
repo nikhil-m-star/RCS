@@ -1,188 +1,150 @@
 import { useState, useEffect } from 'react';
-import { useAuth, useUser } from '@clerk/clerk-react';
-import { Plus, Trash2, Folder, Clock, ChevronRight } from 'lucide-react';
-import axios from 'axios';
-import { Navbar } from '../components/layout/Navbar';
+import { useAuth, useUser, UserButton } from '../lib/auth.js';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Cauldron } from '../components/Cauldron';
+import { FloatingOrb } from '../components/FloatingOrb';
+import { NavBar } from '../components/NavBar';
+import { TetrisFall } from '../components/TetrisFall';
+import { FogBackground } from '../components/FogBackground';
+import { HabitPanel } from './HabitPanel';
+import { setAuthToken, syncUser, getScore, getTodayHabits } from '../lib/api';
 
-const API_BASE = 'http://localhost:5000/api';
+// Demo fallback data when API is not available
+const DEMO_SCORE = { todayScore: 45, pathScore: 320, streak: 5 };
+const DEMO_HABITS = [
+  { id: '1', category: 'transport', label: 'transport', points: 15, loggedAt: new Date().toISOString() },
+  { id: '2', category: 'water', label: 'water', points: 10, loggedAt: new Date().toISOString() },
+  { id: '3', category: 'energy', label: 'energy', points: 20, loggedAt: new Date().toISOString() },
+];
 
 export function Dashboard() {
-  const { getToken } = useAuth();
+  const { getToken, userId } = useAuth();
   const { user } = useUser();
-  const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newProject, setNewProject] = useState({ name: '', description: '' });
+  const [score, setScore] = useState({ todayScore: 0, pathScore: 0, streak: 0 });
+  const [todayHabits, setTodayHabits] = useState([]);
+  const [showPanel, setShowPanel] = useState(false);
 
-  const fetchProjects = async () => {
+  const loadData = async () => {
     try {
       const token = await getToken();
-      const response = await axios.get(`${API_BASE}/projects`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setProjects(response.data);
-    } catch (error) {
-      console.error('Error fetching projects:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleCreateProject = async (e) => {
-    e.preventDefault();
-    try {
-      const token = await getToken();
-      await axios.post(`${API_BASE}/projects`, newProject, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setNewProject({ name: '', description: '' });
-      setIsModalOpen(false);
-      fetchProjects();
-    } catch (error) {
-      console.error('Error creating project:', error);
-    }
-  };
-
-  const handleDeleteProject = async (id) => {
-    if (!confirm('Are you sure you want to delete this project?')) return;
-    try {
-      const token = await getToken();
-      await axios.delete(`${API_BASE}/projects/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      fetchProjects();
-    } catch (error) {
-      console.error('Error deleting project:', error);
+      setAuthToken(token);
+      await syncUser(user?.username || user?.firstName || 'wanderer');
+      const [scoreRes, habitsRes] = await Promise.all([
+        getScore(userId),
+        getTodayHabits(userId),
+      ]);
+      setScore(scoreRes.data);
+      setTodayHabits(habitsRes.data);
+    } catch (err) {
+      console.warn('[Footprints] API unavailable, using demo data');
+      setScore(DEMO_SCORE);
+      setTodayHabits(DEMO_HABITS);
     }
   };
 
   useEffect(() => {
-    fetchProjects();
-  }, []);
+    if (userId) loadData();
+  }, [userId]);
+
+  const loggedCategories = [...new Set(todayHabits.map((h) => h.category))];
 
   return (
-    <div className="min-h-screen pt-24 pb-12 px-6 container">
-      <Navbar />
-      <div className="hero-glow"></div>
+    <div
+      className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden"
+      style={{ background: '#0a0a0f' }}
+    >
+      <FogBackground />
 
-      <header className="flex justify-between items-end mb-12">
-        <div>
-          <h1 className="text-4xl font-bold mb-2">Command Dashboard</h1>
-          <p className="text-text-muted">Welcome back, {user?.firstName || 'Commander'}. Monitoring all regional sectors.</p>
-        </div>
-        <button 
-          onClick={() => setIsModalOpen(true)}
-          className="btn-primary flex items-center gap-2"
+      {/* User avatar top-right */}
+      <TetrisFall delay={0.1} className="fixed top-5 right-5 z-50">
+        <UserButton afterSignOutUrl="/" />
+      </TetrisFall>
+
+      {/* Streak badge top-left */}
+      <TetrisFall delay={0.2} className="fixed top-5 left-5 z-50">
+        <div
+          className="text-sm font-semibold px-3 py-1.5 rounded-full"
+          style={{
+            color: '#a78bfa',
+            background: '#12121a',
+            border: '1px solid rgba(124, 58, 237, 0.25)',
+            boxShadow: '0 0 12px rgba(124, 58, 237, 0.15)',
+          }}
         >
-          <Plus size={20} />
-          Initialize Project
-        </button>
-      </header>
+          {score.streak}d
+        </div>
+      </TetrisFall>
 
-      {loading ? (
-        <div className="flex justify-center py-20">
-          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-        </div>
-      ) : projects.length === 0 ? (
-        <div className="glass rounded-3xl p-20 text-center flex flex-col items-center gap-6">
-          <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center text-primary">
-            <Folder size={40} />
-          </div>
-          <div>
-            <h3 className="text-2xl font-semibold mb-2">No Projects Detected</h3>
-            <p className="text-text-muted">Initiate your first regional operation to begin monitoring.</p>
-          </div>
-          <button 
-            onClick={() => setIsModalOpen(true)}
-            className="btn-primary"
+      {/* Today's score */}
+      <TetrisFall delay={0.3} className="z-10 mb-2">
+        <div className="text-center">
+          <motion.div
+            className="text-5xl font-bold"
+            style={{ color: '#a78bfa' }}
+            key={score.todayScore}
+            initial={{ scale: 1.4, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ type: 'spring', damping: 12 }}
           >
-            Create Your First Project
-          </button>
+            {score.todayScore}
+          </motion.div>
         </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {projects.map((project) => (
-            <div key={project.id} className="glass rounded-3xl p-6 group hover:translate-y-[-4px] transition-all duration-300">
-              <div className="flex justify-between items-start mb-4">
-                <div className="p-3 bg-primary/10 rounded-2xl text-primary">
-                  <Folder size={24} />
-                </div>
-                <button 
-                  onClick={() => handleDeleteProject(project.id)}
-                  className="p-2 text-text-muted hover:text-red-500 transition-colors"
-                >
-                  <Trash2 size={18} />
-                </button>
-              </div>
-              <h3 className="text-xl font-bold mb-2">{project.name}</h3>
-              <p className="text-text-muted text-sm line-clamp-2 mb-6 h-10">
-                {project.description || 'No description provided for this regional operation.'}
-              </p>
-              <div className="flex items-center justify-between pt-4 border-t border-border-glass">
-                <div className="flex items-center gap-2 text-xs text-text-muted">
-                  <Clock size={14} />
-                  {new Date(project.createdAt).toLocaleDateString()}
-                </div>
-                <button className="text-primary flex items-center gap-1 text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
-                  Open System
-                  <ChevronRight size={16} />
-                </button>
-              </div>
-            </div>
+      </TetrisFall>
+
+      {/* Cauldron + orbs */}
+      <TetrisFall delay={0.4} className="relative z-10">
+        <div className="relative">
+          <Cauldron score={score.todayScore} />
+          {loggedCategories.map((cat, i) => (
+            <FloatingOrb key={cat} category={cat} index={i} />
           ))}
         </div>
-      )}
+      </TetrisFall>
 
-      {/* Initialize Project Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center z-[100] px-4">
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsModalOpen(false)}></div>
-          <form 
-            onSubmit={handleCreateProject}
-            className="glass w-full max-w-md rounded-3xl p-8 z-10 relative animate-in fade-in zoom-in duration-300"
-          >
-            <h2 className="text-2xl font-bold mb-6">Initialize New Project</h2>
-            <div className="space-y-4 mb-8">
-              <div>
-                <label className="block text-sm font-medium text-text-muted mb-2">Project Name</label>
-                <input 
-                  type="text"
-                  required
-                  value={newProject.name}
-                  onChange={(e) => setNewProject({...newProject, name: e.target.value})}
-                  className="w-full bg-slate-900/50 border border-border-glass rounded-xl px-4 py-3 text-text-main focus:outline-none focus:border-primary transition-colors"
-                  placeholder="e.g. Sector-7 Monitoring"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-text-muted mb-2">Description</label>
-                <textarea 
-                  rows="3"
-                  value={newProject.description}
-                  onChange={(e) => setNewProject({...newProject, description: e.target.value})}
-                  className="w-full bg-slate-900/50 border border-border-glass rounded-xl px-4 py-3 text-text-main focus:outline-none focus:border-primary transition-colors resize-none"
-                  placeholder="Summarize the regional operation mission..."
-                />
-              </div>
-            </div>
-            <div className="flex gap-4">
-              <button 
-                type="button"
-                onClick={() => setIsModalOpen(false)}
-                className="flex-1 px-6 py-3 rounded-xl border border-border-glass hover:bg-white/5 transition-colors font-semibold"
-              >
-                Cancel
-              </button>
-              <button 
-                type="submit"
-                className="flex-1 btn-primary"
-              >
-                Launch Sector
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
+      {/* Total path score */}
+      <TetrisFall delay={0.5} className="z-10 mt-2">
+        <motion.div
+          className="text-xs font-medium tracking-widest uppercase"
+          style={{ color: '#64748b' }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1 }}
+        >
+          {score.pathScore} total
+        </motion.div>
+      </TetrisFall>
+
+      {/* LOG button */}
+      <TetrisFall delay={0.6} className="z-10 mt-8">
+        <motion.button
+          id="log-habit-btn"
+          className="px-14 py-4 rounded-full text-lg font-bold border-2 cursor-pointer"
+          style={{
+            background: '#7c3aed',
+            borderColor: '#a78bfa',
+            color: '#e2e8f0',
+            boxShadow: '0 0 30px rgba(124, 58, 237, 0.4)',
+          }}
+          whileHover={{ scale: 1.06, boxShadow: '0 0 50px rgba(124, 58, 237, 0.6)' }}
+          whileTap={{ scale: 0.94 }}
+          onClick={() => setShowPanel(true)}
+        >
+          LOG
+        </motion.button>
+      </TetrisFall>
+
+      {/* Habit Panel */}
+      <AnimatePresence>
+        {showPanel && (
+          <HabitPanel
+            onClose={() => setShowPanel(false)}
+            onLogged={loadData}
+            loggedCategories={loggedCategories}
+          />
+        )}
+      </AnimatePresence>
+
+      <NavBar />
     </div>
   );
 }
