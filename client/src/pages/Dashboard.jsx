@@ -224,20 +224,18 @@ export function Dashboard() {
 
             {/* Tetris Area */}
             <div className="flex flex-column gap-5">
-              <TetrisFall delay={0.3}>
-                <div className="relative">
-                  <TetrisStage 
-                    score={score.todayScore} 
-                    items={getShapesFromHabits(todayHabits.slice(1))} 
+              <div className="relative">
+                <TetrisStage 
+                  score={score.todayScore} 
+                  items={getShapesFromHabits(todayHabits.slice(1))} 
+                />
+                {todayHabits.length > 0 && (
+                  <FallingShape 
+                    key={todayHabits[0].id}
+                    item={getShapesFromHabits(todayHabits)[0]} 
                   />
-                  {todayHabits.length > 0 && (
-                    <FallingShape 
-                      key={todayHabits[0].id}
-                      item={getShapesFromHabits(todayHabits)[0]} 
-                    />
-                  )}
-                </div>
-              </TetrisFall>
+                )}
+              </div>
 
               <TetrisFall delay={0.5}>
                 <div className="metric-panel">
