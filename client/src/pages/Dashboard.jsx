@@ -15,11 +15,18 @@ import { categoryColors } from '../lib/categories.js';
 const EMPTY_SCORE = { todayScore: 0, pathScore: 0, streak: 0 };
 
 function getShapesFromHabits(habits) {
-  return habits.map((h, i) => ({
-    ...h,
-    gridX: (i * 2) % 7,
-    gridY: Math.floor(i / 3) * 1.5, // Denser stacking
-  }));
+  return habits.map((h, i) => {
+    // Deterministic "randomness" based on ID or index
+    const seed = h.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const randX = (seed % 7);
+    const randY = (i * 1.8) + (seed % 10) / 10;
+    
+    return {
+      ...h,
+      gridX: randX,
+      gridY: randY,
+    };
+  });
 }
 
 export function Dashboard() {

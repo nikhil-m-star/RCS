@@ -1301,66 +1301,58 @@ input {
 }
 
 /* ============================
-   Spellbook (History)
+   Spellbook (Ledger)
    ============================ */
-.spellbook-timeline {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  padding-left: 2rem;
-}
-
-@media (min-width: 1024px) {
-  .spellbook-timeline {
-    padding-left: 3rem;
-  }
-}
-
-.timeline-line {
-  position: absolute;
-  bottom: 0;
-  left: 0.75rem;
-  top: 0;
-  width: 1px;
-  background: linear-gradient(180deg, transparent, rgba(167, 139, 250, 0.22), transparent);
-}
-
-@media (min-width: 1024px) {
-  .timeline-line {
-    left: 1.25rem;
-  }
-}
-
-.timeline-node {
-  position: absolute;
-  left: -1.65rem;
-  top: 1.5rem;
-  height: 0.75rem;
-  width: 0.75rem;
-  border-radius: 9999px;
-  background: var(--color-glow);
-  box-shadow: 0 0 12px rgba(167, 139, 250, 0.82);
-}
-
-@media (min-width: 1024px) {
-  .timeline-node {
-    left: -2.15rem;
-  }
-}
-
-.spellbook-card {
-  position: relative;
+.ledger-container {
+  overflow: hidden;
   border-radius: 28px;
   border: 1px solid var(--glass-border);
-  padding: 1.25rem;
   background: linear-gradient(180deg, rgba(16, 16, 24, 0.78), rgba(11, 11, 17, 0.84));
+}
+
+.ledger-header, .ledger-row {
+  display: grid;
+  grid-template-columns: 100px 1fr 80px;
+  padding: 1.25rem 1.5rem;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
   transition: var(--transition-smooth);
 }
 
-.spellbook-card:hover {
-  transform: scale(1.005);
-  background: linear-gradient(180deg, rgba(20, 20, 30, 0.82), rgba(13, 13, 20, 0.88));
+@media (min-width: 768px) {
+  .ledger-header, .ledger-row {
+    grid-template-columns: 120px 1fr 100px;
+    padding: 1.25rem 2rem;
+  }
+}
+
+.ledger-row:last-child {
+  border-bottom: none;
+}
+
+.ledger-row:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.ledger-time {
+  font-family: monospace;
+  font-size: 0.875rem;
+  color: #94a3b8;
+}
+
+.ledger-category {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-weight: 700;
+  color: #f5f3ff;
+  text-transform: capitalize;
+}
+
+.ledger-points {
+  text-align: right;
+  font-weight: 800;
+  color: var(--color-glow);
 }
 
 

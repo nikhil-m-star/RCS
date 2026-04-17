@@ -74,18 +74,18 @@ function SettledShape({ item }) {
 
 export function getBlocksForCategory(category) {
   switch (category) {
-    case 'transport': // T-shape
-      return [{x:1,y:0}, {x:0,y:1}, {x:1,y:1}, {x:2,y:1}];
-    case 'water': // I-shape (Long bar - rotated for variety)
-      return [{x:0,y:1}, {x:1,y:1}, {x:2,y:1}, {x:3,y:1}];
-    case 'energy': // L-shape
-      return [{x:0,y:0}, {x:1,y:0}, {x:2,y:0}, {x:2,y:1}];
-    case 'food': // O-shape (Square)
-      return [{x:1,y:0}, {x:2,y:0}, {x:1,y:1}, {x:2,y:1}];
-    case 'nature': // S-shape
-      return [{x:1,y:0}, {x:2,y:0}, {x:0,y:1}, {x:1,y:1}];
-    case 'waste': // J-shape
-      return [{x:0,y:1}, {x:1,y:1}, {x:2,y:1}, {x:0,y:0}];
+    case 'transport': // T
+      return [{x:1,y:1}, {x:0,y:1}, {x:2,y:1}, {x:1,y:2}];
+    case 'water': // Z-shape (More complex than line)
+      return [{x:0,y:1}, {x:1,y:1}, {x:1,y:2}, {x:2,y:2}];
+    case 'energy': // L
+      return [{x:1,y:0}, {x:1,y:1}, {x:1,y:2}, {x:2,y:2}];
+    case 'food': // O (Square)
+      return [{x:1,y:1}, {x:2,y:1}, {x:1,y:2}, {x:2,y:2}];
+    case 'nature': // S
+      return [{x:1,y:1}, {x:2,y:1}, {x:0,y:2}, {x:1,y:2}];
+    case 'waste': // J
+      return [{x:1,y:0}, {x:1,y:1}, {x:1,y:2}, {x:0,y:2}];
     default:
       return [{x:1,y:1}, {x:2,y:1}, {x:1,y:2}, {x:2,y:2}];
   }

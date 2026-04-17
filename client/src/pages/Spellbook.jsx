@@ -193,97 +193,54 @@ export function Spellbook() {
                 <div className="cauldron-panel" style={{ padding: '2rem' }}>
                   <div className="cauldron-panel-glow" />
 
-                  <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-                    <div>
-                      <div className="text-label">Cast Timeline</div>
-                      <div className="text-title mt-2">Every action, in order.</div>
-                    </div>
-                    <div className="text-sm" style={{ color: '#94a3b8' }}>
-                      {isLoading ? 'Loading archive...' : `${habits.length} entries for today`}
-                    </div>
+                <div className="ledger-container">
+                  <div className="ledger-header hidden md-grid">
+                    <div className="text-label">Time</div>
+                    <div className="text-label">Habit Category</div>
+                    <div className="text-label text-right">Credits</div>
                   </div>
 
                   {isLoading ? (
-                    <div className="mt-8 space-y-4">
+                    <div className="p-8 space-y-4">
                       {[0, 1, 2].map((item) => (
-                        <div key={item} className="metric-panel" style={{ opacity: 0.5 }}>
-                          <div className="h-4 w-32 rounded-full bg-white/8" />
-                          <div className="mt-4 h-10 rounded-2xl bg-white/6" />
-                        </div>
+                        <div key={item} className="h-12 w-full rounded-2xl bg-white/5 animate-pulse" />
                       ))}
                     </div>
                   ) : habits.length === 0 ? (
-                    <div className="mt-8 metric-panel flex-center" style={{ padding: '4rem 2rem', textAlign: 'center' }}>
-                      <div>
-                        <div className="text-2xl font-bold tracking-[-0.04em]" style={{ color: '#f5f3ff' }}>
-                          No spells cast yet.
-                        </div>
-                        <div className="mx-auto mt-3 max-w-md text-sm leading-6" style={{ color: '#94a3b8' }}>
-                          Log your first habit from the cauldron and it will appear here with its time, points, and school.
-                        </div>
-                      </div>
+                    <div className="py-20 text-center">
+                      <div className="text-xl font-bold opacity-40">No entries recorded.</div>
                     </div>
                   ) : (
-                    <div className="spellbook-timeline mt-8">
-                      <div className="timeline-line" />
-
-                      {habits.map((habit, index) => {
-                        const color = categoryColors[habit.category] || '#a78bfa';
-
-                        return (
-                          <motion.article
-                            key={habit.id}
-                            className="relative"
-                            initial={{ opacity: 0, y: 18 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true, amount: 0.22 }}
-                            transition={{ duration: 0.32, delay: index * 0.04 }}
-                          >
-                            <div className="timeline-node" style={{ background: color, boxShadow: `0 0 12px ${color}` }} />
-
-                            <div className="spellbook-card">
-                              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                                <div className="flex items-start gap-4">
-                                  <div
-                                    className="glass-pill p-3"
-                                    style={{
-                                      borderColor: `${color}33`,
-                                      background: `${color}14`,
-                                      color,
-                                    }}
-                                  >
-                                    <CategoryIcon category={habit.category} size={24} />
-                                  </div>
-
-                                  <div>
-                                    <div className="text-lg font-bold capitalize tracking-[-0.03em]" style={{ color: '#f5f3ff' }}>
-                                      {habit.category}
-                                    </div>
-                                    <div className="mt-1 text-sm leading-6" style={{ color: '#94a3b8' }}>
-                                      Logged {formatRelativeTime(habit.loggedAt)} at {formatClockTime(habit.loggedAt)}
-                                    </div>
-                                  </div>
-                                </div>
-
-                                <div className="self-start">
-                                  <span
-                                    className="glass-pill px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em]"
-                                    style={{
-                                      color,
-                                      borderColor: `${color}3d`,
-                                      background: `${color}10`,
-                                    }}
-                                  >
-                                    {habit.points} pts
-                                  </span>
-                                </div>
-                              </div>
+                    habits.map((habit, index) => {
+                      const color = categoryColors[habit.category] || '#a78bfa';
+                      return (
+                        <motion.div
+                          key={habit.id}
+                          className="ledger-row"
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: index * 0.03 }}
+                        >
+                          <div className="ledger-time">
+                            {formatClockTime(habit.loggedAt)}
+                          </div>
+                          <div className="ledger-category">
+                            <div 
+                              className="p-1.5 rounded-lg" 
+                              style={{ background: `${color}15`, color: color }}
+                            >
+                              <CategoryIcon category={habit.category} size={18} />
                             </div>
-                          </motion.article>
-                        );
-                      })}
-                    </div>
+                            {habit.category}
+                          </div>
+                          <div className="ledger-points" style={{ color: color }}>
+                            +{habit.points}
+                          </div>
+                        </motion.div>
+                      );
+                    })
                   )}
+                </div>
                 </div>
               </TetrisFall>
 

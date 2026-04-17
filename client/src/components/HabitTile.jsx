@@ -71,7 +71,7 @@ export function HabitTile({ category, onLog, delay = 0, isLogged = false }) {
       }}
       whileTap={{ scale: 0.88 }}
       onClick={handleClick}
-      disabled={isLogged || isLaunching}
+      disabled={isLaunching}
     >
       <div
         className="habit-tile-overlay"
